@@ -105,7 +105,7 @@ function App() {
         }
 
         address = insertedAddress as Address
-        setAddresses((prev) => [...prev, address])
+        setAddresses((prev) => [...prev, address as Address])
       }
 
       if (address) {
