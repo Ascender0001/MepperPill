@@ -888,14 +888,41 @@ input[type="number"]::-moz-number-spin-down {
 
   .totals-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .total-box {
-    padding: 12px;
+    padding: 14px;
   }
 
   .total-label {
     font-size: 11px;
+    margin-bottom: 6px;
+  }
+
+  .settlement-orders {
+    max-height: 400px;
+    gap: 10px;
+  }
+
+  .settlement-item {
+    padding: 11px;
+  }
+
+  .settlement-order-info {
+    gap: 8px;
+  }
+
+  .order-address {
+    font-size: 12px;
+  }
+
+  .order-price {
+    font-size: 11px;
+  }
+
+  .order-timestamp {
+    font-size: 10px;
   }
 }
 
@@ -1019,35 +1046,82 @@ input[type="number"]::-moz-number-spin-down {
     overflow-x: hidden;
   }
 
+  .settlement-orders {
+    max-height: 450px;
+    gap: 10px;
+    padding: 12px;
+  }
+
   .settlement-item {
-    padding: 10px;
+    padding: 12px;
+    gap: 10px;
   }
 
   .settlement-label {
-    flex-direction: column;
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .settlement-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-top: 0;
   }
 
   .settlement-order-info {
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    gap: 4px;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
   }
 
   .order-address {
-    font-size: 12px;
-    min-width: 100%;
+    font-size: 13px;
+    min-width: auto;
   }
 
   .order-type-badge {
     font-size: 10px;
+    padding: 4px 8px;
   }
 
   .order-price {
-    font-size: 11px;
+    font-size: 12px;
   }
 
   .order-timestamp {
+    font-size: 10px;
+  }
+
+  .settlement-totals {
+    padding: 18px;
+    margin-top: 20px;
+  }
+
+  .total-card {
+    padding: 12px;
+    margin-bottom: 16px;
+  }
+
+  .total-card h3 {
+    font-size: 14px;
+  }
+
+  .totals-grid {
+    gap: 12px;
+  }
+
+  .total-box {
+    padding: 16px;
+  }
+
+  .total-label {
+    font-size: 12px;
+  }
+
+  .total-amount {
+    font-size: 22px;
+  }
     font-size: 10px;
     color: #888;
   }
