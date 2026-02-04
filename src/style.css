@@ -412,8 +412,8 @@ input[type="number"]::-moz-number-spin-down {
 .settlement-orders {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  max-height: 400px;
+  gap: 12px;
+  max-height: 500px;
   overflow-y: auto;
   padding: 15px;
   background: rgba(0, 0, 0, 0.7);
@@ -436,8 +436,8 @@ input[type="number"]::-moz-number-spin-down {
 
 .settlement-item {
   display: flex;
-  align-items: center;
-  padding: 12px;
+  align-items: flex-start;
+  padding: 14px;
   background: rgba(255, 0, 51, 0.05);
   border-radius: 0;
   border: 1px solid #ff0033;
@@ -448,19 +448,20 @@ input[type="number"]::-moz-number-spin-down {
 .settlement-item:hover {
   border-color: #ff6b00;
   box-shadow: 0 0 10px rgba(255, 107, 0, 0.4);
+  background: rgba(255, 0, 51, 0.1);
 }
 
 .settlement-label {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   cursor: pointer;
   width: 100%;
 }
 
 .settlement-label input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
   accent-color: #ff0033;
   appearance: none;
@@ -471,6 +472,8 @@ input[type="number"]::-moz-number-spin-down {
   border-radius: 0;
   position: relative;
   transition: all 0.3s ease;
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
 .settlement-label input[type="checkbox"]:hover {
@@ -498,8 +501,9 @@ input[type="number"]::-moz-number-spin-down {
 .settlement-order-info {
   display: flex;
   gap: 12px;
-  align-items: center;
+  align-items: flex-start;
   flex: 1;
+  flex-direction: column;
 }
 
 .order-address {
@@ -509,14 +513,15 @@ input[type="number"]::-moz-number-spin-down {
   text-transform: uppercase;
   font-family: 'Courier New', monospace;
   font-size: 14px;
+  width: 100%;
 }
 
 .order-type-badge {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 900;
   color: #000;
   background: linear-gradient(90deg, #ff0033 0%, #ff6b00 100%);
-  padding: 4px 8px;
+  padding: 5px 10px;
   border-radius: 0;
   white-space: nowrap;
   text-transform: uppercase;
@@ -526,8 +531,7 @@ input[type="number"]::-moz-number-spin-down {
 .order-price {
   font-weight: 900;
   color: #ff6b00;
-  min-width: 60px;
-  text-align: right;
+  text-align: left;
   }
 
   .order-timestamp {
@@ -547,11 +551,16 @@ input[type="number"]::-moz-number-spin-down {
   border-radius: 0;
   border: 2px solid #ff0033;
   box-shadow: 0 0 20px rgba(255, 0, 51, 0.3);
+  margin-top: 25px;
 }
 
 .total-card {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  padding: 15px;
+  background: rgba(255, 0, 51, 0.05);
+  border: 1px solid #ff0033;
+  border-radius: 0;
 }
 
 .total-card h3 {
@@ -565,17 +574,23 @@ input[type="number"]::-moz-number-spin-down {
 .totals-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 15px;
+  gap: 12px;
   margin-bottom: 20px;
 }
 
 .total-box {
-  padding: 20px;
+  padding: 18px;
   border-radius: 0;
   text-align: center;
   color: #000;
   box-shadow: 0 0 15px rgba(255, 0, 51, 0.4);
   border: 2px solid;
+  transition: all 0.3s ease;
+}
+
+.total-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(255, 0, 51, 0.6);
 }
 
 .total-all {
@@ -596,8 +611,21 @@ input[type="number"]::-moz-number-spin-down {
 }
 
 .total-label {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  opacity: 0.9;
+}
+
+.total-amount {
+  font-size: 28px;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
+}
   opacity: 1;
   margin-bottom: 8px;
   text-transform: uppercase;
