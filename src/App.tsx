@@ -123,7 +123,7 @@ function App() {
         const newOrder: any = {
           id: Date.now(),
           addressid: address.id,
-          addressName: address.name,
+          addressname: address.name,
           type,
           details: details || null,
           price,
