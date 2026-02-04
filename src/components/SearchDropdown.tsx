@@ -7,7 +7,7 @@ interface SearchDropdownProps {
   placeholder?: string
 }
 
-export function SearchDropdown({ items, onSelect, placeholder = '🔍 Search...' }: SearchDropdownProps) {
+export function SearchDropdown({ items, onSelect, placeholder = '🔍 Keresés...' }: SearchDropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedId, setSelectedId] = useState<string | number | null>(null)
@@ -52,14 +52,14 @@ export function SearchDropdown({ items, onSelect, placeholder = '🔍 Search...'
           <input
             type="text"
             className="dropdown-search"
-            placeholder="Type to search..."
+            placeholder="Írjon a kereséshez..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             autoFocus
           />
           <div className="dropdown-list">
             {filtered.length === 0 ? (
-              <div className="dropdown-empty">No results found</div>
+              <div className="dropdown-empty">Nincsenek találatok</div>
             ) : (
               filtered.map((item) => (
                 <button
