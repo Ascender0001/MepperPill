@@ -120,9 +120,9 @@ function App() {
           minute: '2-digit',
           second: '2-digit',
         })
-        const newOrder: Order = {
+        const newOrder: any = {
           id: Date.now(),
-          addressId: address.id,
+          addressid: address.id,
           addressName: address.name,
           type,
           details: details || null,
