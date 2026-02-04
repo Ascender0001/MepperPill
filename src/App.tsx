@@ -68,7 +68,22 @@ function App() {
     const details = (form.elements.namedItem('orderDetails') as HTMLInputElement).value.trim()
     const price = parseFloat((form.elements.namedItem('orderPrice') as HTMLInputElement).value)
 
-    if (addressName && type && price >= 0) {
+    if (!addressName) {
+      alert('Válasszon egy címet!')
+      return
+    }
+
+    if (!type) {
+      alert('Válasszon szállítási típust!')
+      return
+    }
+
+    if (isNaN(price) || price < 0) {
+      alert('Adjon meg érvényes árat!')
+      return
+    }
+
+    try {
       let address = addresses.find((a) => a.name.toLowerCase() === addressName.toLowerCase())
 
       if (!address) {
@@ -85,6 +100,7 @@ function App() {
 
         if (addressError) {
           console.error('Supabase insert address error:', addressError)
+          alert('Hiba a cím mentésekor: ' + addressError.message)
           return
         }
 
@@ -109,7 +125,7 @@ function App() {
           addressId: address.id,
           addressName: address.name,
           type,
-          details,
+          details: details || null,
           price,
           timestamp: `${date} ${time}`,
         }
@@ -122,13 +138,18 @@ function App() {
 
         if (orderError) {
           console.error('Supabase insert order error:', orderError)
+          alert('Hiba a megrendelés mentésekor: ' + orderError.message)
           return
         }
 
         setOrders((prev) => [...prev, (insertedOrder as Order)])
         form.reset()
         setSelectedOrderAddressName('')
+        alert('Megrendelés sikeresen mentve!')
       }
+    } catch (error) {
+      console.error('Unexpected error:', error)
+      alert('Hiba történt: ' + (error instanceof Error ? error.message : 'Ismeretlen hiba'))
     }
   }
 
