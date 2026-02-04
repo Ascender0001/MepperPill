@@ -6,7 +6,7 @@
 
 body {
   font-family: 'Courier New', monospace;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 50%, #16213e 100%);
+  background: linear-gradient(135deg, #050505 0%, #0b0b16 50%, #0e1324 100%);
   min-height: 100vh;
   padding: 20px;
   color: #fff;
@@ -15,12 +15,14 @@ body {
 .container {
   max-width: 600px;
   margin: 0 auto;
-  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a2e 100%);
+  background: linear-gradient(135deg, #0a0a0a 0%, #131326 100%);
   border-radius: 0;
   border: 2px solid #ff0033;
-  box-shadow: 0 0 30px rgba(255, 0, 51, 0.4), inset 0 0 20px rgba(255, 0, 51, 0.1);
+  box-shadow: 0 0 28px rgba(255, 0, 51, 0.35), inset 0 0 18px rgba(255, 0, 51, 0.08);
   padding: 30px;
   position: relative;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .container::before {
@@ -237,6 +239,8 @@ select {
   color: #0f0;
   transition: all 0.3s ease;
   text-transform: uppercase;
+  min-height: 44px;
+  touch-action: manipulation;
 }
 
 input::placeholder,
@@ -251,6 +255,25 @@ select:focus {
   box-shadow: 0 0 15px rgba(255, 107, 0, 0.5), inset 0 0 10px rgba(255, 0, 51, 0.1);
 }
 
+/* Number Input Spinners */
+input[type="number"] {
+  font-variant-numeric: tabular-nums;
+  appearance: textfield;
+  -moz-appearance: textfield;
+  -webkit-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"]::-moz-number-spin-up,
+input[type="number"]::-moz-number-spin-down {
+  display: none;
+}
+
 /* Buttons */
 .btn {
   padding: 12px 20px;
@@ -263,6 +286,11 @@ select:focus {
   text-transform: uppercase;
   letter-spacing: 2px;
   font-family: 'Courier New', monospace;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
 }
 
 .btn-primary {
@@ -384,8 +412,8 @@ select:focus {
 .settlement-orders {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  max-height: 400px;
+  gap: 12px;
+  max-height: 500px;
   overflow-y: auto;
   padding: 15px;
   background: rgba(0, 0, 0, 0.7);
@@ -408,39 +436,74 @@ select:focus {
 
 .settlement-item {
   display: flex;
-  align-items: center;
-  padding: 12px;
+  align-items: flex-start;
+  padding: 14px;
   background: rgba(255, 0, 51, 0.05);
   border-radius: 0;
   border: 1px solid #ff0033;
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .settlement-item:hover {
   border-color: #ff6b00;
   box-shadow: 0 0 10px rgba(255, 107, 0, 0.4);
+  background: rgba(255, 0, 51, 0.1);
 }
 
 .settlement-label {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   cursor: pointer;
   width: 100%;
 }
 
 .settlement-label input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
   accent-color: #ff0033;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid #ff0033;
+  border-radius: 0;
+  position: relative;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.settlement-label input[type="checkbox"]:hover {
+  border-color: #ff6b00;
+  box-shadow: 0 0 10px rgba(255, 107, 0, 0.4);
+}
+
+.settlement-label input[type="checkbox"]:checked {
+  background: linear-gradient(90deg, #ff0033 0%, #ff6b00 100%);
+  border-color: #ff0033;
+  box-shadow: 0 0 15px rgba(255, 0, 51, 0.6);
+}
+
+.settlement-label input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #000;
+  font-weight: 900;
+  font-size: 14px;
 }
 
 .settlement-order-info {
   display: flex;
   gap: 12px;
-  align-items: center;
+  align-items: flex-start;
   flex: 1;
+  flex-direction: column;
 }
 
 .order-address {
@@ -450,14 +513,15 @@ select:focus {
   text-transform: uppercase;
   font-family: 'Courier New', monospace;
   font-size: 14px;
+  width: 100%;
 }
 
 .order-type-badge {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 900;
   color: #000;
   background: linear-gradient(90deg, #ff0033 0%, #ff6b00 100%);
-  padding: 4px 8px;
+  padding: 5px 10px;
   border-radius: 0;
   white-space: nowrap;
   text-transform: uppercase;
@@ -467,8 +531,16 @@ select:focus {
 .order-price {
   font-weight: 900;
   color: #ff6b00;
-  min-width: 60px;
-  text-align: right;
+  text-align: left;
+  }
+
+  .order-timestamp {
+    font-size: 12px;
+    color: #888;
+    font-family: 'Courier New', monospace;
+    white-space: nowrap;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   font-family: 'Courier New', monospace;
   text-transform: uppercase;
 }
@@ -479,11 +551,16 @@ select:focus {
   border-radius: 0;
   border: 2px solid #ff0033;
   box-shadow: 0 0 20px rgba(255, 0, 51, 0.3);
+  margin-top: 25px;
 }
 
 .total-card {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  padding: 15px;
+  background: rgba(255, 0, 51, 0.05);
+  border: 1px solid #ff0033;
+  border-radius: 0;
 }
 
 .total-card h3 {
@@ -496,18 +573,24 @@ select:focus {
 
 .totals-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 15px;
+  grid-template-columns: 1fr;
+  gap: 12px;
   margin-bottom: 20px;
 }
 
 .total-box {
-  padding: 20px;
+  padding: 18px;
   border-radius: 0;
   text-align: center;
   color: #000;
   box-shadow: 0 0 15px rgba(255, 0, 51, 0.4);
   border: 2px solid;
+  transition: all 0.3s ease;
+}
+
+.total-box:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(255, 0, 51, 0.6);
 }
 
 .total-all {
@@ -528,8 +611,21 @@ select:focus {
 }
 
 .total-label {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  opacity: 0.9;
+}
+
+.total-amount {
+  font-size: 28px;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
+}
   opacity: 1;
   margin-bottom: 8px;
   text-transform: uppercase;
@@ -541,31 +637,598 @@ select:focus {
   font-size: 28px;
   font-weight: 900;
   font-family: 'Courier New', monospace;
+  line-height: 1.2;
+  max-width: 100%;
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* Order Details Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.modal-content {
+  width: 100%;
+  max-width: 520px;
+  background: #0a0a0a;
+  border: 2px solid #ff0033;
+  box-shadow: 0 0 25px rgba(255, 0, 51, 0.5);
+  padding: 20px;
+  max-height: 80vh;
+  overflow-y: auto;
+  border-radius: 0;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.modal-title {
+  color: #ff0033;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.modal-close {
+  border: 2px solid #ff0033;
+  background: transparent;
+  color: #ff0033;
+  font-weight: 900;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  text-transform: uppercase;
+  min-height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.modal-close:hover {
+  border-color: #ff6b00;
+  color: #ff6b00;
+  box-shadow: 0 0 10px rgba(255, 107, 0, 0.5);
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 0, 51, 0.3);
+  background: rgba(255, 0, 51, 0.05);
+}
+
+.modal-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #ff6b00;
+  font-weight: 900;
+}
+
+.modal-value {
+  color: #0f0;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-family: 'Courier New', monospace;
 }
 
 /* Responsive */
-@media (max-width: 480px) {
+@media (max-width: 900px) {
+  .container {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 12px;
+  }
+
   .container {
     padding: 20px;
+    border: 2px solid #ff0033;
+  }
+
+  .container::before {
+    font-size: 9px;
+    padding: 4px 10px;
+    letter-spacing: 1px;
   }
 
   h1 {
-    font-size: 24px;
-    margin-top: 15px;
+    font-size: 28px;
+    margin-bottom: 25px;
+    letter-spacing: 2px;
+  }
+
+  h2 {
+    font-size: 16px;
+    margin-bottom: 18px;
+  }
+
+  .tabs {
+    gap: 8px;
+    flex-wrap: nowrap;
   }
 
   .tab-btn {
-    padding: 10px 15px;
+    flex: 1;
+    padding: 10px 12px;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+  }
+
+  form {
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  input,
+  select {
+    padding: 10px;
     font-size: 14px;
   }
 
+  .btn {
+    padding: 10px 16px;
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+
+  .btn-small {
+    padding: 5px 10px;
+    font-size: 11px;
+    margin-left: 8px;
+  }
+
+  .search-input {
+    padding: 10px;
+    font-size: 14px;
+    margin-bottom: 18px;
+  }
+
+  .filter-buttons {
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .filter-btn {
+    padding: 8px 12px;
+    font-size: 11px;
+    flex: 1 1 auto;
+  }
+
   .item {
-    flex-direction: column;
-    align-items: flex-start;
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .item-name {
+    font-size: 14px;
+  }
+
+  .item-detail {
+    font-size: 13px;
   }
 
   .item-actions {
-    margin-left: 0;
+    margin-left: 8px;
+  }
+
+  .settlement-order-info {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .order-address {
+    min-width: 100%;
+  }
+
+  .order-price,
+  .order-timestamp {
+    min-width: auto;
+    font-size: 12px;
+  }
+
+  .settlement-item {
+    padding: 12px;
+  }
+
+  .modal-content {
+    padding: 18px;
+    max-height: 85vh;
+    border: 2px solid #ff0033;
+  }
+
+  .modal-close {
+    width: 28px;
+    height: 28px;
+    font-size: 20px;
+  }
+
+  .modal-row {
+    padding: 8px 10px;
+    gap: 4px;
+  }
+
+  .modal-label {
+    font-size: 10px;
+  }
+
+  .modal-value {
+    font-size: 12px;
+  }
+
+  .total-amount {
+    font-size: 20px;
+  }
+
+  .totals-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .total-box {
+    padding: 14px;
+  }
+
+  .total-label {
+    font-size: 11px;
+    margin-bottom: 6px;
+  }
+
+  .settlement-orders {
+    max-height: 400px;
+    gap: 10px;
+  }
+
+  .settlement-item {
+    padding: 11px;
+  }
+
+  .settlement-order-info {
+    gap: 8px;
+  }
+
+  .order-address {
+    font-size: 12px;
+  }
+
+  .order-price {
+    font-size: 11px;
+  }
+
+  .order-timestamp {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+
+  .container {
+    padding: 16px;
+    max-width: 100%;
+    border: 2px solid #ff0033;
+  }
+
+  .container::before {
+    font-size: 8px;
+    padding: 3px 8px;
+    letter-spacing: 0.5px;
+    top: -12px;
+  }
+
+  h1 {
+    font-size: 22px;
     margin-top: 12px;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+  }
+
+  h2 {
+    font-size: 14px;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+  }
+
+  .tabs {
+    gap: 6px;
+    margin-bottom: 20px;
+    flex-wrap: nowrap;
+  }
+
+  .tab-btn {
+    padding: 8px 10px;
+    font-size: 11px;
+    letter-spacing: 0px;
+    flex: 1 1 50%;
+  }
+
+  form {
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  input,
+  select {
+    padding: 10px;
+    font-size: 14px;
+    border: 2px solid #ff0033;
+  }
+
+  .btn {
+    padding: 10px 12px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    border: 2px solid #ff0033;
+    width: 100%;
+  }
+
+  .btn-small {
+    padding: 6px 8px;
+    font-size: 10px;
+    margin-left: 0;
+    margin-top: 8px;
+    width: 100%;
+  }
+
+  .search-input {
+    padding: 10px;
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+
+  .filter-buttons {
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .filter-btn {
+    padding: 8px 10px;
+    font-size: 10px;
+    flex: 1 1 auto;
+  }
+
+  .item {
+    padding: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .item-name {
+    font-size: 13px;
+  }
+
+  .item-detail {
+    font-size: 12px;
+  }
+
+  .item-actions {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 8px;
+    display: flex;
+    gap: 6px;
+  }
+
+  .item-actions .btn {
+    flex: 1;
+  }
+
+  .settlement-list {
+    overflow-x: hidden;
+  }
+
+  .settlement-orders {
+    max-height: 450px;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .settlement-item {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .settlement-label {
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .settlement-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-top: 0;
+  }
+
+  .settlement-order-info {
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .order-address {
+    font-size: 13px;
+    min-width: auto;
+  }
+
+  .order-type-badge {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+
+  .order-price {
+    font-size: 12px;
+  }
+
+  .order-timestamp {
+    font-size: 10px;
+  }
+
+  .settlement-totals {
+    padding: 18px;
+    margin-top: 20px;
+  }
+
+  .total-card {
+    padding: 12px;
+    margin-bottom: 16px;
+  }
+
+  .total-card h3 {
+    font-size: 14px;
+  }
+
+  .totals-grid {
+    gap: 12px;
+  }
+
+  .total-box {
+    padding: 16px;
+  }
+
+  .total-label {
+    font-size: 12px;
+  }
+
+  .total-amount {
+    font-size: 22px;
+  }
+    font-size: 10px;
+    color: #888;
+  }
+
+  .modal-overlay {
+    padding: 10px;
+  }
+
+  .modal-content {
+    padding: 16px;
+    border-radius: 0;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 2px solid #ff0033;
+  }
+
+  .modal-header {
+    gap: 10px;
+  }
+
+  .modal-title {
+    font-size: 14px;
+  }
+
+  .modal-close {
+    width: 24px;
+    height: 24px;
+    font-size: 18px;
+  }
+
+  .modal-body {
+    gap: 10px;
+  }
+
+  .modal-row {
+    padding: 8px;
+    gap: 4px;
+  }
+
+  .modal-label {
+    font-size: 9px;
+  }
+
+  .modal-value {
+    font-size: 11px;
+  }
+
+  .total-card {
+    padding: 12px;
+    margin-bottom: 16px;
+  }
+
+  .total-card h3 {
+    font-size: 13px;
+  }
+
+  .totals-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .total-box {
+    padding: 10px;
+    border: 2px solid #ff0033;
+  }
+
+  .total-label {
+    font-size: 10px;
+  }
+
+  .total-amount {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .container {
+    padding: 12px;
+  }
+
+  h1 {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  .tab-btn {
+    padding: 6px 8px;
+    font-size: 10px;
+  }
+
+  .btn {
+    font-size: 11px;
+    padding: 8px 10px;
+  }
+
+  input,
+  select {
+    padding: 8px;
+    font-size: 13px;
+  }
+
+  .item {
+    padding: 8px;
+  }
+
+  .filter-btn {
+    padding: 6px 8px;
+    font-size: 9px;
   }
 }
