@@ -21,6 +21,8 @@ body {
   box-shadow: 0 0 28px rgba(255, 0, 51, 0.35), inset 0 0 18px rgba(255, 0, 51, 0.08);
   padding: 30px;
   position: relative;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 .container::before {
@@ -237,6 +239,8 @@ select {
   color: #0f0;
   transition: all 0.3s ease;
   text-transform: uppercase;
+  min-height: 44px;
+  touch-action: manipulation;
 }
 
 input::placeholder,
@@ -282,6 +286,11 @@ input[type="number"]::-moz-number-spin-down {
   text-transform: uppercase;
   letter-spacing: 2px;
   font-family: 'Courier New', monospace;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: manipulation;
 }
 
 .btn-primary {
@@ -616,6 +625,7 @@ input[type="number"]::-moz-number-spin-down {
   justify-content: center;
   z-index: 1000;
   padding: 20px;
+  overflow-y: auto;
 }
 
 .modal-content {
@@ -625,6 +635,9 @@ input[type="number"]::-moz-number-spin-down {
   border: 2px solid #ff0033;
   box-shadow: 0 0 25px rgba(255, 0, 51, 0.5);
   padding: 20px;
+  max-height: 80vh;
+  overflow-y: auto;
+  border-radius: 0;
 }
 
 .modal-header {
@@ -651,6 +664,11 @@ input[type="number"]::-moz-number-spin-down {
   height: 32px;
   cursor: pointer;
   text-transform: uppercase;
+  min-height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
 .modal-close:hover {
@@ -698,77 +716,417 @@ input[type="number"]::-moz-number-spin-down {
 
 @media (max-width: 768px) {
   body {
-    padding: 16px;
+    padding: 12px;
   }
 
   .container {
-    padding: 24px;
+    padding: 20px;
+    border: 2px solid #ff0033;
+  }
+
+  .container::before {
+    font-size: 9px;
+    padding: 4px 10px;
+    letter-spacing: 1px;
+  }
+
+  h1 {
+    font-size: 28px;
+    margin-bottom: 25px;
+    letter-spacing: 2px;
+  }
+
+  h2 {
+    font-size: 16px;
+    margin-bottom: 18px;
   }
 
   .tabs {
-    flex-wrap: wrap;
+    gap: 8px;
+    flex-wrap: nowrap;
   }
 
   .tab-btn {
-    flex: 1 1 45%;
-    text-align: center;
+    flex: 1;
+    padding: 10px 12px;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+  }
+
+  form {
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  input,
+  select {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .btn {
+    padding: 10px 16px;
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+
+  .btn-small {
+    padding: 5px 10px;
+    font-size: 11px;
+    margin-left: 8px;
+  }
+
+  .search-input {
+    padding: 10px;
+    font-size: 14px;
+    margin-bottom: 18px;
+  }
+
+  .filter-buttons {
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .filter-btn {
+    padding: 8px 12px;
+    font-size: 11px;
+    flex: 1 1 auto;
+  }
+
+  .item {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .item-name {
+    font-size: 14px;
+  }
+
+  .item-detail {
+    font-size: 13px;
+  }
+
+  .item-actions {
+    margin-left: 8px;
   }
 
   .settlement-order-info {
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
+  }
+
+  .order-address {
+    min-width: 100%;
   }
 
   .order-price,
   .order-timestamp {
     min-width: auto;
+    font-size: 12px;
+  }
+
+  .settlement-item {
+    padding: 12px;
   }
 
   .modal-content {
-    padding: 16px;
+    padding: 18px;
+    max-height: 85vh;
+    border: 2px solid #ff0033;
   }
 
-  .total-amount {
-    font-size: 22px;
-  }
-}
-
-@media (max-width: 480px) {
-  .container {
-    padding: 20px;
+  .modal-close {
+    width: 28px;
+    height: 28px;
+    font-size: 20px;
   }
 
-  h1 {
-    font-size: 24px;
-    margin-top: 15px;
+  .modal-row {
+    padding: 8px 10px;
+    gap: 4px;
   }
 
-  .tab-btn {
-    padding: 10px 15px;
-    font-size: 14px;
-    flex: 1 1 100%;
+  .modal-label {
+    font-size: 10px;
   }
 
-  .item {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .item-actions {
-    margin-left: 0;
-    margin-top: 12px;
+  .modal-value {
+    font-size: 12px;
   }
 
   .total-amount {
     font-size: 20px;
   }
 
+  .totals-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .total-box {
+    padding: 12px;
+  }
+
+  .total-label {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+
+  .container {
+    padding: 16px;
+    max-width: 100%;
+    border: 2px solid #ff0033;
+  }
+
+  .container::before {
+    font-size: 8px;
+    padding: 3px 8px;
+    letter-spacing: 0.5px;
+    top: -12px;
+  }
+
+  h1 {
+    font-size: 22px;
+    margin-top: 12px;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+  }
+
+  h2 {
+    font-size: 14px;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+  }
+
+  .tabs {
+    gap: 6px;
+    margin-bottom: 20px;
+    flex-wrap: nowrap;
+  }
+
+  .tab-btn {
+    padding: 8px 10px;
+    font-size: 11px;
+    letter-spacing: 0px;
+    flex: 1 1 50%;
+  }
+
+  form {
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  input,
+  select {
+    padding: 10px;
+    font-size: 14px;
+    border: 2px solid #ff0033;
+  }
+
+  .btn {
+    padding: 10px 12px;
+    font-size: 12px;
+    letter-spacing: 1px;
+    border: 2px solid #ff0033;
+    width: 100%;
+  }
+
+  .btn-small {
+    padding: 6px 8px;
+    font-size: 10px;
+    margin-left: 0;
+    margin-top: 8px;
+    width: 100%;
+  }
+
+  .search-input {
+    padding: 10px;
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
+
+  .filter-buttons {
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .filter-btn {
+    padding: 8px 10px;
+    font-size: 10px;
+    flex: 1 1 auto;
+  }
+
+  .item {
+    padding: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .item-name {
+    font-size: 13px;
+  }
+
+  .item-detail {
+    font-size: 12px;
+  }
+
+  .item-actions {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 8px;
+    display: flex;
+    gap: 6px;
+  }
+
+  .item-actions .btn {
+    flex: 1;
+  }
+
+  .settlement-list {
+    overflow-x: hidden;
+  }
+
   .settlement-item {
     padding: 10px;
+  }
+
+  .settlement-label {
+    flex-direction: column;
   }
 
   .settlement-order-info {
     flex-direction: column;
     align-items: flex-start;
+    width: 100%;
+    gap: 4px;
+  }
+
+  .order-address {
+    font-size: 12px;
+    min-width: 100%;
+  }
+
+  .order-type-badge {
+    font-size: 10px;
+  }
+
+  .order-price {
+    font-size: 11px;
+  }
+
+  .order-timestamp {
+    font-size: 10px;
+    color: #888;
+  }
+
+  .modal-overlay {
+    padding: 10px;
+  }
+
+  .modal-content {
+    padding: 16px;
+    border-radius: 0;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 2px solid #ff0033;
+  }
+
+  .modal-header {
+    gap: 10px;
+  }
+
+  .modal-title {
+    font-size: 14px;
+  }
+
+  .modal-close {
+    width: 24px;
+    height: 24px;
+    font-size: 18px;
+  }
+
+  .modal-body {
+    gap: 10px;
+  }
+
+  .modal-row {
+    padding: 8px;
+    gap: 4px;
+  }
+
+  .modal-label {
+    font-size: 9px;
+  }
+
+  .modal-value {
+    font-size: 11px;
+  }
+
+  .total-card {
+    padding: 12px;
+    margin-bottom: 16px;
+  }
+
+  .total-card h3 {
+    font-size: 13px;
+  }
+
+  .totals-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .total-box {
+    padding: 10px;
+    border: 2px solid #ff0033;
+  }
+
+  .total-label {
+    font-size: 10px;
+  }
+
+  .total-amount {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 360px) {
+  .container {
+    padding: 12px;
+  }
+
+  h1 {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+
+  .tab-btn {
+    padding: 6px 8px;
+    font-size: 10px;
+  }
+
+  .btn {
+    font-size: 11px;
+    padding: 8px 10px;
+  }
+
+  input,
+  select {
+    padding: 8px;
+    font-size: 13px;
+  }
+
+  .item {
+    padding: 8px;
+  }
+
+  .filter-btn {
+    padding: 6px 8px;
+    font-size: 9px;
   }
 }
