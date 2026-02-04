@@ -12,8 +12,8 @@ interface Address {
 
 interface Order {
   id: number
-  addressId: number
-  addressName: string
+  addressid: number
+  addressname: string
   type: 'black' | 'white'
   details: string | null
   price: number
@@ -176,14 +176,14 @@ function App() {
   }
 
   const filteredOrders = orders.filter((order: Order) => {
-    const matchesSearch = order.addressName.toLowerCase().includes(orderSearchTerm.toLowerCase())
+    const matchesSearch = order.addressname.toLowerCase().includes(orderSearchTerm.toLowerCase())
     const matchesType = orderTypeFilter === 'all' || order.type === orderTypeFilter
     return matchesSearch && matchesType
   })
 
   const filteredSettlementOrders = orders.filter((order: Order) => {
     const term = settlementSearchTerm.toLowerCase()
-    const matchesAddress = order.addressName.toLowerCase().includes(term)
+    const matchesAddress = order.addressname.toLowerCase().includes(term)
     const matchesDetails = (order.details || '').toLowerCase().includes(term)
     return matchesAddress || matchesDetails
   })
@@ -317,7 +317,7 @@ function App() {
                 return (
                   <div key={order.id} className="item">
                     <div className="item-content">
-                      <div className="item-name">{order.addressName}</div>
+                      <div className="item-name">{order.addressname}</div>
                       <div className="item-detail">{order.details || 'Nincsenek részletek'}</div>
                       <span className={`item-badge ${badgeClass}`}>
                         {icon} {order.type === 'black' ? 'FEKETE' : 'FEHÉR'}
@@ -378,7 +378,7 @@ function App() {
                           onClick={(event) => event.stopPropagation()}
                         />
                         <span className="settlement-order-info">
-                          <span className="order-address">{order.addressName}</span>
+                          <span className="order-address">{order.addressname}</span>
                           <span className="order-type-badge">
                             {order.type === 'black' ? '⚫ Fekete' : '⚪ Fehér'}
                           </span>
@@ -438,7 +438,7 @@ function App() {
             <div className="modal-body">
               <div className="modal-row">
                 <span className="modal-label">Cím</span>
-                <span className="modal-value">{selectedOrderDetails.addressName}</span>
+                <span className="modal-value">{selectedOrderDetails.addressname}</span>
               </div>
               <div className="modal-row">
                 <span className="modal-label">Típus</span>
