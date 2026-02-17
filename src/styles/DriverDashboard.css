@@ -1,0 +1,92 @@
+﻿/* Driver Dashboard  Field Operations */
+.driver-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.summary-card {
+  background: linear-gradient(160deg, rgba(255, 0, 51, 0.05) 0%, rgba(0, 0, 0, 0.4) 100%);
+  border: 1.5px solid rgba(255, 0, 51, 0.25);
+  border-radius: 6px;
+  padding: 18px 14px;
+  text-align: center;
+  transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.summary-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #ff0033 0%, #ff6b00 100%);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.summary-card:hover {
+  border-color: #ff0033;
+  box-shadow: 0 4px 20px rgba(255, 0, 51, 0.25);
+  transform: translateY(-3px);
+}
+
+.summary-card:hover::before {
+  opacity: 1;
+}
+
+.summary-label {
+  color: #888;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-family: 'Courier New', monospace;
+  margin-bottom: 8px;
+}
+
+.summary-value {
+  color: #ff6b00;
+  font-size: 24px;
+  font-weight: 900;
+  font-family: 'Courier New', monospace;
+  text-shadow: 0 0 12px rgba(255, 107, 0, 0.3);
+}
+
+.driver-action-btns {
+  flex-direction: column;
+  gap: 6px;
+}
+
+.delivered-item {
+  opacity: 0.6;
+  border-color: rgba(255, 0, 51, 0.15) !important;
+  border-left-color: rgba(255, 0, 51, 0.3) !important;
+}
+
+.delivered-item:hover {
+  opacity: 0.9;
+}
+
+.delivered-item .item-name {
+  text-decoration: line-through;
+  text-decoration-color: rgba(255, 0, 51, 0.3);
+}
+
+@media (max-width: 480px) {
+  .driver-summary {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .summary-card {
+    padding: 14px 12px;
+  }
+
+  .summary-value {
+    font-size: 20px;
+  }
+}
