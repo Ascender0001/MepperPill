@@ -8,6 +8,7 @@ interface Address {
   id: number
   name: string
   address: string
+  phone_num: string | null
 }
 
 interface Profile {
@@ -38,6 +39,7 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
   const [orders, setOrders] = useState<Order[]>([])
   const [activeTab, setActiveTab] = useState<'orders' | 'settlement'>('orders')
   const [selectedOrderAddressName, setSelectedOrderAddressName] = useState('')
+  const [orderPhoneNum, setOrderPhoneNum] = useState('')
   const [selectedOrderType, setSelectedOrderType] = useState<'black' | 'white'>('black')
   const [selectedOrderDetails, setSelectedOrderDetails] = useState<Order | null>(null)
   const [orderSearchTerm, setOrderSearchTerm] = useState('')
@@ -61,6 +63,7 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
     e.preventDefault()
     const form = e.currentTarget
     const addressName = selectedOrderAddressName.trim()
+    const phoneNum = orderPhoneNum.trim()
     const type = selectedOrderType
     const details = (form.elements.namedItem('orderDetails') as HTMLInputElement).value.trim()
     const price = parseFloat((form.elements.namedItem('orderPrice') as HTMLInputElement).value)
@@ -73,12 +76,27 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
       let address = addresses.find((a) => a.name.toLowerCase() === addressName.toLowerCase())
 
       if (!address) {
-        const newAddress: Address = { id: Date.now(), name: addressName, address: addressName }
+        const newAddress: Address = {
+          id: Date.now(),
+          name: addressName,
+          address: addressName,
+          phone_num: phoneNum || null,
+        }
         const { data: insertedAddress, error: addressError } = await supabase
           .from('addresses').insert(newAddress).select().single()
         if (addressError) { alert('Hiba a cím mentésekor: ' + addressError.message); return }
         address = insertedAddress as Address
         setAddresses((prev) => [...prev, address as Address])
+      } else if (phoneNum && phoneNum !== (address.phone_num || '')) {
+        const { data: updatedAddress, error: addressUpdateError } = await supabase
+          .from('addresses')
+          .update({ phone_num: phoneNum })
+          .eq('id', address.id)
+          .select()
+          .single()
+        if (addressUpdateError) { alert('Hiba a telefonszám mentésekor: ' + addressUpdateError.message); return }
+        address = updatedAddress as Address
+        setAddresses((prev) => prev.map((a) => (a.id === address!.id ? (address as Address) : a)))
       }
 
       if (address) {
@@ -103,6 +121,7 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
         setOrders((prev) => [insertedOrder as Order, ...prev])
         form.reset()
         setSelectedOrderAddressName('')
+        setOrderPhoneNum('')
         alert('Megrendelés sikeresen mentve!')
       }
     } catch (error) {
@@ -185,8 +204,19 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
           <form onSubmit={handleAddOrder}>
             <AddressSelector
               addresses={addresses}
-              onSelect={(name) => setSelectedOrderAddressName(name)}
+              onSelect={(name, id) => {
+                setSelectedOrderAddressName(name)
+                const selectedAddress = id ? addresses.find((a) => a.id === id) : undefined
+                setOrderPhoneNum(selectedAddress?.phone_num || '')
+              }}
               placeholder="📍 Válasszon meglévő címet vagy írjon be újat"
+            />
+            <input
+              type="tel"
+              name="orderPhoneNum"
+              placeholder="Telefonszám (opcionális)"
+              value={orderPhoneNum}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setOrderPhoneNum(e.target.value)}
             />
             <DeliveryTypeSelect value={selectedOrderType} onSelect={(type) => setSelectedOrderType(type)} />
             <input type="text" name="orderDetails" placeholder="Megrendelés részletei (opcionális)" />
