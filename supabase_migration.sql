@@ -30,6 +30,7 @@ CREATE TABLE IF NOT EXISTS public.addresses (
   id BIGINT PRIMARY KEY,
   name TEXT NOT NULL,
   address TEXT NOT NULL,
+  phone_num TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
