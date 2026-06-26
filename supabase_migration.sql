@@ -47,20 +47,20 @@ CREATE TABLE IF NOT EXISTS public.addresses (
 ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
 
 -- Everyone can read all profiles (needed for manager to list drivers)
-CREATE POLICY "Profiles are viewable by authenticated users"
+CREATE POLICY IF NOT EXISTS "Profiles are viewable by authenticated users"
   ON public.profiles FOR SELECT
   TO authenticated
   USING (true);
 
 -- Users can update only their own profile
-CREATE POLICY "Users can update own profile"
+CREATE POLICY IF NOT EXISTS "Users can update own profile"
   ON public.profiles FOR UPDATE
   TO authenticated
   USING (auth.uid() = id)
   WITH CHECK (auth.uid() = id);
 
 -- Users can insert their own profile row (on registration)
-CREATE POLICY "Users can insert own profile"
+CREATE POLICY IF NOT EXISTS "Users can insert own profile"
   ON public.profiles FOR INSERT
   TO authenticated
   WITH CHECK (auth.uid() = id);
@@ -72,7 +72,7 @@ CREATE POLICY "Users can insert own profile"
 ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
 
 -- Managers can see ALL orders
-CREATE POLICY "Managers can view all orders"
+CREATE POLICY IF NOT EXISTS "Managers can view all orders"
   ON public.orders FOR SELECT
   TO authenticated
   USING (
@@ -83,13 +83,13 @@ CREATE POLICY "Managers can view all orders"
   );
 
 -- Drivers can see only their own orders
-CREATE POLICY "Drivers can view own orders"
+CREATE POLICY IF NOT EXISTS "Drivers can view own orders"
   ON public.orders FOR SELECT
   TO authenticated
   USING (driver_id = auth.uid());
 
 -- Drivers can insert their own orders
-CREATE POLICY "Drivers can insert orders"
+CREATE POLICY IF NOT EXISTS "Drivers can insert orders"
   ON public.orders FOR INSERT
   TO authenticated
   WITH CHECK (
@@ -101,7 +101,7 @@ CREATE POLICY "Drivers can insert orders"
   );
 
 -- Managers can update any order (assign driver, etc.)
-CREATE POLICY "Managers can update any order"
+CREATE POLICY IF NOT EXISTS "Managers can update any order"
   ON public.orders FOR UPDATE
   TO authenticated
   USING (
@@ -112,14 +112,14 @@ CREATE POLICY "Managers can update any order"
   );
 
 -- Drivers can update only their own orders (e.g. mark as delivered)
-CREATE POLICY "Drivers can update own orders"
+CREATE POLICY IF NOT EXISTS "Drivers can update own orders"
   ON public.orders FOR UPDATE
   TO authenticated
   USING (driver_id = auth.uid())
   WITH CHECK (driver_id = auth.uid());
 
 -- Managers can delete any order
-CREATE POLICY "Managers can delete orders"
+CREATE POLICY IF NOT EXISTS "Managers can delete orders"
   ON public.orders FOR DELETE
   TO authenticated
   USING (
@@ -130,7 +130,7 @@ CREATE POLICY "Managers can delete orders"
   );
 
 -- Drivers can delete their own orders
-CREATE POLICY "Drivers can delete own orders"
+CREATE POLICY IF NOT EXISTS "Drivers can delete own orders"
   ON public.orders FOR DELETE
   TO authenticated
   USING (driver_id = auth.uid());
@@ -165,12 +165,12 @@ CREATE TRIGGER on_auth_user_created
 
 ALTER TABLE public.addresses ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Authenticated users can view addresses"
+CREATE POLICY IF NOT EXISTS "Authenticated users can view addresses"
   ON public.addresses FOR SELECT
   TO authenticated
   USING (true);
 
-CREATE POLICY "Authenticated users can insert addresses"
+CREATE POLICY IF NOT EXISTS "Authenticated users can insert addresses"
   ON public.addresses FOR INSERT
   TO authenticated
   WITH CHECK (true);
