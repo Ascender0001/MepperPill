@@ -85,7 +85,7 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
         const now = new Date()
         const date = now.toLocaleDateString('hu-HU', { year: 'numeric', month: '2-digit', day: '2-digit' })
         const time = now.toLocaleTimeString('hu-HU', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
-        const newOrder: any = {
+        const newOrder: Order = {
           id: Date.now(),
           addressid: address.id,
           addressname: address.name,

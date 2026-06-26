@@ -3,17 +3,21 @@ import '../styles/DeliveryTypeSelect.css'
 
 interface DeliveryTypeSelectProps {
   onSelect: (type: 'black' | 'white') => void
-  value: string
+  value: 'black' | 'white'
 }
 
 export function DeliveryTypeSelect({ onSelect, value }: DeliveryTypeSelectProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const [selected, setSelected] = useState<string>(value)
+  const [selected, setSelected] = useState<'black' | 'white'>(value)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
+  useEffect(() => {
+    setSelected(value)
+  }, [value])
+
   const options = [
-    { value: 'black', label: '⚫ Fekete', color: 'black' },
-    { value: 'white', label: '⚪ Fehér', color: 'white' },
+    { value: 'black' as const, label: '⚫ Fekete', color: 'black' },
+    { value: 'white' as const, label: '⚪ Fehér', color: 'white' },
   ]
 
   useEffect(() => {
@@ -27,9 +31,9 @@ export function DeliveryTypeSelect({ onSelect, value }: DeliveryTypeSelectProps)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const handleSelect = (optionValue: string) => {
+  const handleSelect = (optionValue: 'black' | 'white') => {
     setSelected(optionValue)
-    onSelect(optionValue as 'black' | 'white')
+    onSelect(optionValue)
     setIsOpen(false)
   }
 

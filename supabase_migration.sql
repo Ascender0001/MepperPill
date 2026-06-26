@@ -12,10 +12,26 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
--- 2. Add a driver_id column to the existing orders table
---    so each order is assigned to a delivery driver.
-ALTER TABLE public.orders
-  ADD COLUMN IF NOT EXISTS driver_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL;
+-- 2. Orders table
+CREATE TABLE IF NOT EXISTS public.orders (
+  id BIGINT PRIMARY KEY,
+  addressid BIGINT NOT NULL,
+  addressname TEXT NOT NULL,
+  type TEXT NOT NULL CHECK (type IN ('black', 'white')),
+  details TEXT,
+  price DOUBLE PRECISION NOT NULL DEFAULT 0,
+  timestamp TEXT NOT NULL,
+  driver_id UUID REFERENCES public.profiles(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- 3. Addresses table
+CREATE TABLE IF NOT EXISTS public.addresses (
+  id BIGINT PRIMARY KEY,
+  name TEXT NOT NULL,
+  address TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
 
 
 
