@@ -13,9 +13,10 @@ interface ProfileData {
 interface ProfilePageProps {
   profile: ProfileData
   onProfileUpdated: (updated: ProfileData) => void
+  onBack: () => void
 }
 
-export function ProfilePage({ profile, onProfileUpdated }: ProfilePageProps) {
+export function ProfilePage({ profile, onProfileUpdated, onBack }: ProfilePageProps) {
   const { showToast } = useToast()
   const [fullName, setFullName] = useState(profile.full_name || '')
   const [phoneNum, setPhoneNum] = useState(profile.phone_num || '')
@@ -28,25 +29,42 @@ export function ProfilePage({ profile, onProfileUpdated }: ProfilePageProps) {
       return
     }
     setSaving(true)
+
     const { data, error } = await supabase
       .from('profiles')
-      .update({ full_name: fullName.trim(), phone_num: phoneNum.trim() || null })
+      .update({ full_name: fullName.trim() })
       .eq('id', profile.id)
       .select()
       .single()
 
     if (error) {
       showToast('Hiba a mentéskor: ' + error.message, 'error')
-    } else if (data) {
-      onProfileUpdated(data as ProfileData)
-      showToast('Profil frissítve!')
+      setSaving(false)
+      return
     }
+
+    let updated = data as ProfileData
+
+    const { error: phoneError } = await supabase
+      .from('profiles')
+      .update({ phone_num: phoneNum.trim() || null })
+      .eq('id', profile.id)
+
+    if (phoneError && !phoneError.message.includes('phone_num')) {
+      showToast('Hiba a telefonszám mentésekor: ' + phoneError.message, 'error')
+    }
+
+    onProfileUpdated({ ...updated, phone_num: phoneNum.trim() || null })
+    showToast('Profil frissítve!')
     setSaving(false)
   }
 
   return (
     <div className="profile-page">
-      <h2 className="profile-title">Profil</h2>
+      <div className="profile-header">
+        <button className="profile-back" onClick={onBack}>← Vissza</button>
+        <h2 className="profile-title">Profil</h2>
+      </div>
       <form onSubmit={handleSave} className="profile-form">
         <div className="profile-field">
           <label className="profile-label">Email</label>

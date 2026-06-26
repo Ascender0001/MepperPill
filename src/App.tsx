@@ -87,7 +87,7 @@ function AppInner() {
         onNavigateProfile={() => setPage('profile')}
       />
       {page === 'profile' ? (
-        <ProfilePage profile={profile} onProfileUpdated={handleProfileUpdated} />
+        <ProfilePage profile={profile} onProfileUpdated={handleProfileUpdated} onBack={() => setPage('dashboard')} />
       ) : profile.role === 'manager' ? (
         <ManagerDashboard userProfile={profile} />
       ) : (
