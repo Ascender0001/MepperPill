@@ -4,6 +4,7 @@ import { supabase } from './supabaseClient'
 import { AuthPage } from './components/AuthPage'
 import { ManagerDashboard } from './components/ManagerDashboard'
 import { DriverDashboard } from './components/DriverDashboard'
+import { ToastProvider } from './components/Toast'
 import './style.css'
 
 interface Profile {
@@ -13,20 +14,18 @@ interface Profile {
   role: string
 }
 
-function App() {
+function AppInner() {
   const [session, setSession] = useState<Session | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Get initial session
     supabase.auth.getSession().then(({ data: { session: s } }) => {
       setSession(s)
       if (s?.user) void loadProfile(s.user.id)
       else setLoading(false)
     })
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
       setSession(s)
       if (s?.user) void loadProfile(s.user.id)
@@ -56,7 +55,6 @@ function App() {
   }
 
   const handleAuth = () => {
-    // Session will be picked up by onAuthStateChange
   }
 
   if (loading) {
@@ -79,4 +77,10 @@ function App() {
   return <DriverDashboard userProfile={profile} onLogout={handleLogout} />
 }
 
-export default App
+export default function App() {
+  return (
+    <ToastProvider>
+      <AppInner />
+    </ToastProvider>
+  )
+}

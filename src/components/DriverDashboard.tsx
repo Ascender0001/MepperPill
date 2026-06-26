@@ -2,6 +2,7 @@ import { useState, useEffect, FormEvent, ChangeEvent } from 'react'
 import { supabase } from '../supabaseClient'
 import { AddressSelector } from './AddressSelector'
 import { DeliveryTypeSelect } from './DeliveryTypeSelect'
+import { useToast } from './Toast'
 import '../styles/DriverDashboard.css'
 
 interface Address {
@@ -35,6 +36,7 @@ interface DriverDashboardProps {
 }
 
 export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps) {
+  const { showToast } = useToast()
   const [addresses, setAddresses] = useState<Address[]>([])
   const [orders, setOrders] = useState<Order[]>([])
   const [activeTab, setActiveTab] = useState<'orders' | 'settlement'>('orders')
@@ -71,9 +73,9 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
     const details = (form.elements.namedItem('orderDetails') as HTMLInputElement).value.trim()
     const price = parseFloat((form.elements.namedItem('orderPrice') as HTMLInputElement).value)
 
-    if (!addressName) { alert('Válasszon egy címet!'); return }
-    if (!type) { alert('Válasszon szállítási típust!'); return }
-    if (isNaN(price) || price < 0) { alert('Adjon meg érvényes árat!'); return }
+    if (!addressName) { showToast('Válasszon egy címet!', 'error'); return }
+    if (!type) { showToast('Válasszon szállítási típust!', 'error'); return }
+    if (isNaN(price) || price < 0) { showToast('Adjon meg érvényes árat!', 'error'); return }
 
     try {
       let address = addresses.find((a) => a.name.toLowerCase() === addressName.toLowerCase())
@@ -87,7 +89,7 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
         }
         const { data: insertedAddress, error: addressError } = await supabase
           .from('addresses').insert(newAddress).select().single()
-        if (addressError) { alert('Hiba a cím mentésekor: ' + addressError.message); return }
+        if (addressError) { showToast('Hiba a cím mentésekor: ' + addressError.message, 'error'); return }
         address = insertedAddress as Address
         setAddresses((prev) => [...prev, address as Address])
       } else if (phoneNum && phoneNum !== (address.phone_num || '')) {
@@ -97,7 +99,7 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
           .eq('id', address.id)
           .select()
           .single()
-        if (addressUpdateError) { alert('Hiba a telefonszám mentésekor: ' + addressUpdateError.message); return }
+        if (addressUpdateError) { showToast('Hiba a telefonszám mentésekor: ' + addressUpdateError.message, 'error'); return }
         address = updatedAddress as Address
         setAddresses((prev) => prev.map((a) => (a.id === address!.id ? (address as Address) : a)))
       }
@@ -119,16 +121,16 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
 
         const { data: insertedOrder, error: orderError } = await supabase
           .from('orders').insert(newOrder).select().single()
-        if (orderError) { alert('Hiba a megrendelés mentésekor: ' + orderError.message); return }
+        if (orderError) { showToast('Hiba a megrendelés mentésekor: ' + orderError.message, 'error'); return }
 
         setOrders((prev) => [insertedOrder as Order, ...prev])
         form.reset()
         setSelectedOrderAddressName('')
         setOrderPhoneNum('')
-        alert('Megrendelés sikeresen mentve!')
+        showToast('Megrendelés sikeresen mentve!')
       }
     } catch (error) {
-      alert('Hiba történt: ' + (error instanceof Error ? error.message : 'Ismeretlen hiba'))
+      showToast('Hiba történt: ' + (error instanceof Error ? error.message : 'Ismeretlen hiba'), 'error')
     }
   }
 
