@@ -22,9 +22,11 @@ export function IconPhone({ size = 16 }: { size?: number }) {
 
 export function IconDriver({ size = 18 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="#ff6b00" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="8" r="4" fill="none" />
-      <path d="M20 21a8 8 0 0 0-16 0" fill="none" />
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="#ff6b00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M5 17a2 2 0 0 1-2-2V9l3-3h10l4 4v5a2 2 0 0 1-2 2" />
+      <circle cx="7" cy="17" r="2" fill="none" />
+      <circle cx="17" cy="17" r="2" fill="none" />
+      <path d="M5 17h14" />
     </svg>
   )
 }
@@ -49,16 +51,16 @@ export function IconSearch({ size = 14 }: { size?: number }) {
 
 export function IconDotBlack({ size = 10 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 10 10" fill="none">
-      <circle cx="5" cy="5" r="4" fill="#ff0033" stroke="rgba(255,0,51,0.4)" strokeWidth="1" />
+    <svg width={size} height={size} viewBox="0 0 10 10">
+      <circle cx="5" cy="5" r="4" fill="#000" />
     </svg>
   )
 }
 
 export function IconDotWhite({ size = 10 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 10 10" fill="none">
-      <circle cx="5" cy="5" r="4" fill="#ff6b00" stroke="rgba(255,107,0,0.4)" strokeWidth="1" />
+    <svg width={size} height={size} viewBox="0 0 10 10">
+      <circle cx="5" cy="5" r="4" fill="#fff" />
     </svg>
   )
 }
