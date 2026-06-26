@@ -1,7 +1,7 @@
 import { useState, useEffect, ChangeEvent } from 'react'
 import { supabase } from '../supabaseClient'
 import '../styles/ManagerDashboard.css'
-import { IconManager, IconSearch, IconMoney, IconDotBlack, IconDotWhite, IconX } from './icons'
+import { IconSearch, IconMoney, IconDotBlack, IconDotWhite, IconX } from './icons'
 
 interface Profile {
   id: string
@@ -23,10 +23,9 @@ interface Order {
 
 interface ManagerDashboardProps {
   userProfile: Profile
-  onLogout: () => void
 }
 
-export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProps) {
+export function ManagerDashboard({ userProfile }: ManagerDashboardProps) {
   const [orders, setOrders] = useState<Order[]>([])
   const [drivers, setDrivers] = useState<Profile[]>([])
   const [activeTab, setActiveTab] = useState<'orders' | 'drivers' | 'settlement'>('orders')
@@ -119,16 +118,7 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
   }
 
   return (
-    <div className="container">
-      <div className="dashboard-header">
-        <h1>🍕 Mepper Pill</h1>
-        <div className="user-info">
-          <span className="user-role"><IconManager size={14} /> Menedzser</span>
-          <span className="user-name">{userProfile.full_name || userProfile.email}</span>
-          <button className="btn btn-danger btn-small" onClick={onLogout}>Kijelentkezés</button>
-        </div>
-      </div>
-
+    <div>
       <div className="tabs">
         <button className={`tab-btn ${activeTab === 'orders' ? 'active' : ''}`} onClick={() => setActiveTab('orders')}>
           Megrendelések

@@ -33,10 +33,9 @@ interface Order {
 
 interface DriverDashboardProps {
   userProfile: Profile
-  onLogout: () => void
 }
 
-export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps) {
+export function DriverDashboard({ userProfile }: DriverDashboardProps) {
   const { showToast } = useToast()
   const [addresses, setAddresses] = useState<Address[]>([])
   const [orders, setOrders] = useState<Order[]>([])
@@ -190,16 +189,7 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
   }
 
   return (
-    <div className="container">
-      <div className="dashboard-header">
-        <h1>🍕 Mepper Pill</h1>
-        <div className="user-info">
-          <span className="user-role">🚗 Futár</span>
-          <span className="user-name">{userProfile.full_name || userProfile.email}</span>
-          <button className="btn btn-danger btn-small" onClick={onLogout}>Kijelentkezés</button>
-        </div>
-      </div>
-
+    <div>
       <div className="driver-summary">
         <div className="summary-card">
           <div className="summary-label">Rendelések</div>

@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
   email TEXT NOT NULL,
   full_name TEXT NOT NULL DEFAULT '',
   role TEXT NOT NULL DEFAULT 'driver' CHECK (role IN ('driver', 'manager')),
+  phone_num TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 

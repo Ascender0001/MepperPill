@@ -208,6 +208,161 @@ h2::after {
   text-shadow: 0 0 6px rgba(255, 107, 0, 0.2);
 }
 
+/* ---------- Nav Bar ---------- */
+.navbar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 12px 0 10px;
+  border-bottom: 1px solid var(--border-subtle);
+  text-align: center;
+}
+
+.navbar-title {
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #eee;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.navbar-role {
+  background: linear-gradient(90deg, var(--red) 0%, var(--orange) 100%);
+  color: #000;
+  padding: 3px 10px;
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-family: 'Courier New', monospace;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.navbar-user {
+  color: var(--orange);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Courier New', monospace;
+  text-shadow: 0 0 6px rgba(255, 107, 0, 0.2);
+}
+
+.navbar-btn {
+  padding: 6px 12px;
+  background: transparent;
+  border: 1.5px solid rgba(255, 107, 0, 0.3);
+  border-radius: var(--radius-sm);
+  color: var(--orange);
+  font-size: 10px;
+  font-weight: 800;
+  font-family: 'Courier New', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.navbar-btn:hover {
+  background: rgba(255, 107, 0, 0.1);
+  border-color: var(--orange);
+  box-shadow: 0 0 10px rgba(255, 107, 0, 0.2);
+}
+
+.navbar-btn-logout {
+  border-color: rgba(255, 0, 51, 0.3);
+  color: var(--red);
+}
+
+.navbar-btn-logout:hover {
+  background: rgba(255, 0, 51, 0.1);
+  border-color: var(--red);
+  box-shadow: 0 0 10px var(--glow-red);
+}
+
+@media (min-width: 480px) {
+  .navbar {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+  }
+  .navbar-right {
+    justify-content: flex-end;
+  }
+}
+
+/* ---------- Profile Page ---------- */
+.profile-page {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 4px;
+}
+
+.profile-title {
+  font-size: 14px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--orange);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.profile-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.profile-input {
+  padding: 12px 14px;
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-family: 'Courier New', monospace;
+  background: var(--bg-input);
+  color: #eee;
+  transition: var(--transition);
+}
+
+.profile-input:focus {
+  outline: none;
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px var(--glow-orange);
+}
+
+.profile-input-readonly {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* ---------- Driver Summary Cards ---------- */
 .driver-summary {
   display: grid;

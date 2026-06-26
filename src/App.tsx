@@ -4,6 +4,8 @@ import { supabase } from './supabaseClient'
 import { AuthPage } from './components/AuthPage'
 import { ManagerDashboard } from './components/ManagerDashboard'
 import { DriverDashboard } from './components/DriverDashboard'
+import { NavBar } from './components/NavBar'
+import { ProfilePage } from './components/ProfilePage'
 import { ToastProvider } from './components/Toast'
 import './style.css'
 
@@ -11,6 +13,7 @@ interface Profile {
   id: string
   email: string
   full_name: string
+  phone_num: string | null
   role: string
 }
 
@@ -18,6 +21,7 @@ function AppInner() {
   const [session, setSession] = useState<Session | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
+  const [page, setPage] = useState<'dashboard' | 'profile'>('dashboard')
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session: s } }) => {
@@ -54,7 +58,10 @@ function AppInner() {
     setProfile(null)
   }
 
-  const handleAuth = () => {
+  const handleAuth = () => {}
+
+  const handleProfileUpdated = (updated: Profile) => {
+    setProfile(updated)
   }
 
   if (loading) {
@@ -70,11 +77,24 @@ function AppInner() {
     return <AuthPage onAuth={handleAuth} />
   }
 
-  if (profile.role === 'manager') {
-    return <ManagerDashboard userProfile={profile} onLogout={handleLogout} />
-  }
-
-  return <DriverDashboard userProfile={profile} onLogout={handleLogout} />
+  return (
+    <div className="container">
+      <NavBar
+        fullName={profile.full_name}
+        email={profile.email}
+        role={profile.role as 'driver' | 'manager'}
+        onLogout={handleLogout}
+        onNavigateProfile={() => setPage('profile')}
+      />
+      {page === 'profile' ? (
+        <ProfilePage profile={profile} onProfileUpdated={handleProfileUpdated} />
+      ) : profile.role === 'manager' ? (
+        <ManagerDashboard userProfile={profile} />
+      ) : (
+        <DriverDashboard userProfile={profile} />
+      )}
+    </div>
+  )
 }
 
 export default function App() {
