@@ -3,7 +3,7 @@ import { supabase } from '../supabaseClient'
 import { AddressSelector } from './AddressSelector'
 import { DeliveryTypeSelect } from './DeliveryTypeSelect'
 import { useToast } from './Toast'
-import { IconSearch, IconDotBlack, IconDotWhite, IconMoney, IconPhone, IconLocation } from './icons'
+import { IconSearch, IconDotBlack, IconDotWhite, IconMoney, IconPhone, IconLocation, IconX } from './icons'
 import '../styles/DriverDashboard.css'
 
 interface Address {
