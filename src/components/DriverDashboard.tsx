@@ -248,6 +248,8 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
               filteredOrders.map((order) => {
                 const badgeClass = order.type === 'black' ? 'badge-black' : 'badge-white'
                 const icon = order.type === 'black' ? '⚫' : '⚪'
+                const orderAddress = addresses.find((a) => a.id === order.addressid)
+                const phoneNum = orderAddress?.phone_num
                 return (
                   <div key={order.id} className="item">
                     <div className="item-content">
@@ -258,8 +260,12 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
                       </span>
                       <div className="item-detail">💰 Ár: {formatRsd(order.price)}</div>
                       <div className="item-detail">Hozzáadva: {order.timestamp}</div>
+                      {phoneNum && <div className="item-detail">📞 {phoneNum}</div>}
                     </div>
                     <div className="item-actions">
+                      {phoneNum && (
+                        <a href={`tel:${phoneNum}`} className="btn btn-phone btn-small">📞</a>
+                      )}
                       <button className="btn btn-danger btn-small" onClick={() => handleDeleteOrder(order.id)}>Törlés</button>
                     </div>
                   </div>
