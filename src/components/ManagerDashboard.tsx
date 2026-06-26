@@ -1,6 +1,7 @@
 import { useState, useEffect, ChangeEvent } from 'react'
 import { supabase } from '../supabaseClient'
 import '../styles/ManagerDashboard.css'
+import { IconPizza, IconManager, IconSearch, IconMoney, IconDriver, IconDotBlack, IconDotWhite, IconX } from './icons'
 
 interface Profile {
   id: string
@@ -120,9 +121,9 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
   return (
     <div className="container">
       <div className="dashboard-header">
-        <h1>🍕 Mepper Pill</h1>
+        <h1 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}><IconPizza size={28} /> Mepper Pill</h1>
         <div className="user-info">
-          <span className="user-role">👔 Menedzser</span>
+          <span className="user-role"><IconManager size={14} /> Menedzser</span>
           <span className="user-name">{userProfile.full_name || userProfile.email}</span>
           <button className="btn btn-danger btn-small" onClick={onLogout}>Kijelentkezés</button>
         </div>
@@ -147,7 +148,7 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
           <div className="search-bar">
             <input
               type="text"
-              placeholder="🔍 Megrendelések keresése cím alapján..."
+              placeholder="Megrendelések keresése cím alapján..."
               value={orderSearchTerm}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setOrderSearchTerm(e.target.value)}
               className="search-input"
@@ -156,8 +157,8 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
 
           <div className="filter-buttons">
             <button className={`filter-btn ${orderTypeFilter === 'all' ? 'active' : ''}`} onClick={() => setOrderTypeFilter('all')}>Összes</button>
-            <button className={`filter-btn ${orderTypeFilter === 'black' ? 'active' : ''}`} onClick={() => setOrderTypeFilter('black')}>⚫ Fekete</button>
-            <button className={`filter-btn ${orderTypeFilter === 'white' ? 'active' : ''}`} onClick={() => setOrderTypeFilter('white')}>⚪ Fehér</button>
+            <button className={`filter-btn ${orderTypeFilter === 'black' ? 'active' : ''}`} onClick={() => setOrderTypeFilter('black')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, justifyContent: 'center' }}><IconDotBlack size={10} /> Fekete</button>
+            <button className={`filter-btn ${orderTypeFilter === 'white' ? 'active' : ''}`} onClick={() => setOrderTypeFilter('white')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, justifyContent: 'center' }}><IconDotWhite size={10} /> Fehér</button>
           </div>
 
           <div className="list">
@@ -168,16 +169,16 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
             ) : (
               filteredOrders.map((order) => {
                 const badgeClass = order.type === 'black' ? 'badge-black' : 'badge-white'
-                const icon = order.type === 'black' ? '⚫' : '⚪'
                 return (
                   <div key={order.id} className="item">
                     <div className="item-content">
                       <div className="item-name">{order.addressname}</div>
                       <div className="item-detail">{order.details || 'Nincsenek részletek'}</div>
-                      <span className={`item-badge ${badgeClass}`}>
-                        {icon} {order.type === 'black' ? 'FEKETE' : 'FEHÉR'}
+                      <span className={`item-badge ${badgeClass}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                        {order.type === 'black' ? <IconDotBlack size={10} /> : <IconDotWhite size={10} />}
+                        {order.type === 'black' ? 'FEKETE' : 'FEHÉR'}
                       </span>
-                      <div className="item-detail">💰 Ár: {formatRsd(order.price)}</div>
+                      <div className="item-detail" style={{ display: 'flex', alignItems: 'center', gap: 4 }}><IconMoney size={14} /> Ár: {formatRsd(order.price)}</div>
                       <div className="item-detail">Hozzáadva: {order.timestamp}</div>
                       <div className="item-detail">Futár: {getDriverName(order.driver_id)}</div>
 
@@ -222,7 +223,7 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
                 return (
                   <div key={driver.id} className="driver-card">
                     <div className="driver-info">
-                      <div className="driver-name">🚗 {driver.full_name || 'Névtelen'}</div>
+                      <div className="driver-name" style={{ display: 'flex', alignItems: 'center', gap: 4 }}><IconDriver size={14} /> {driver.full_name || 'Névtelen'}</div>
                       <div className="driver-email">{driver.email}</div>
                     </div>
                     <div className="driver-stats">
@@ -269,7 +270,7 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
                 <div className="search-bar">
                   <input
                     type="text"
-                    placeholder="🔍 Keresés az elszámolásban..."
+                    placeholder="Keresés az elszámolásban..."
                     value={settlementSearchTerm}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setSettlementSearchTerm(e.target.value)}
                     className="search-input"
@@ -287,7 +288,10 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
                         />
                         <span className="settlement-order-info">
                           <span className="order-address">{order.addressname}</span>
-                          <span className="order-type-badge">{order.type === 'black' ? '⚫ Fekete' : '⚪ Fehér'}</span>
+                          <span className="order-type-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                            {order.type === 'black' ? <IconDotBlack size={8} /> : <IconDotWhite size={8} />}
+                            {order.type === 'black' ? 'Fekete' : 'Fehér'}
+                          </span>
                           <span className="order-price">{formatRsd(order.price)}</span>
                           <span className="order-timestamp">{order.timestamp}</span>
                           <span className="order-driver">{getDriverName(order.driver_id)}</span>
@@ -306,11 +310,11 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
                       <div className="total-amount">{formatRsd(getSettlementTotals().totalAll)}</div>
                     </div>
                     <div className="total-box total-black">
-                      <div className="total-label">⚫ Fekete</div>
+                      <div className="total-label" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><IconDotBlack size={10} /> Fekete</div>
                       <div className="total-amount">{formatRsd(getSettlementTotals().totalBlack)}</div>
                     </div>
                     <div className="total-box total-white">
-                      <div className="total-label">⚪ Fehér</div>
+                      <div className="total-label" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><IconDotWhite size={10} /> Fehér</div>
                       <div className="total-amount">{formatRsd(getSettlementTotals().totalWhite)}</div>
                     </div>
                   </div>
@@ -329,11 +333,14 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3 className="modal-title">Megrendelés részletei</h3>
-              <button className="modal-close" onClick={() => setSelectedOrderDetails(null)}>✕</button>
+              <button className="modal-close" onClick={() => setSelectedOrderDetails(null)}><IconX size={16} /></button>
             </div>
             <div className="modal-body">
               <div className="modal-row"><span className="modal-label">Cím</span><span className="modal-value">{selectedOrderDetails.addressname}</span></div>
-              <div className="modal-row"><span className="modal-label">Típus</span><span className="modal-value">{selectedOrderDetails.type === 'black' ? '⚫ Fekete' : '⚪ Fehér'}</span></div>
+              <div className="modal-row"><span className="modal-label">Típus</span><span className="modal-value" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                {selectedOrderDetails.type === 'black' ? <IconDotBlack size={10} /> : <IconDotWhite size={10} />}
+                {selectedOrderDetails.type === 'black' ? 'Fekete' : 'Fehér'}
+              </span></div>
               <div className="modal-row"><span className="modal-label">Részletek</span><span className="modal-value">{selectedOrderDetails.details || 'Nincsenek részletek'}</span></div>
               <div className="modal-row"><span className="modal-label">Ár</span><span className="modal-value">{formatRsd(selectedOrderDetails.price)}</span></div>
               <div className="modal-row"><span className="modal-label">Időpont</span><span className="modal-value">{selectedOrderDetails.timestamp}</span></div>

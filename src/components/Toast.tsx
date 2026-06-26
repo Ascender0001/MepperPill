@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useCallback, type ReactNode } from 'react'
 import '../styles/Toast.css'
+import { IconCheck, IconX } from './icons'
 
 interface ToastMessage {
   id: number
@@ -32,7 +33,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       <div className="toast-container">
         {toasts.map((t) => (
           <div key={t.id} className={`toast toast-${t.type}`}>
-            <span>{t.type === 'success' ? '✓' : '✕'}</span>
+            <span>{t.type === 'success' ? <IconCheck size={14} /> : <IconX size={14} />}</span>
             {t.text}
           </div>
         ))}

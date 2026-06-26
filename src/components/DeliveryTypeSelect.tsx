@@ -1,3 +1,4 @@
+import { IconDotBlack, IconDotWhite } from './icons'
 import '../styles/DeliveryTypeSelect.css'
 
 interface DeliveryTypeSelectProps {
@@ -13,14 +14,14 @@ export function DeliveryTypeSelect({ onSelect, value }: DeliveryTypeSelectProps)
         className={`switch-btn ${value === 'black' ? 'active black' : ''}`}
         onClick={() => onSelect('black')}
       >
-        ⚫ Fekete
+        <IconDotBlack size={12} /> Fekete
       </button>
       <button
         type="button"
         className={`switch-btn ${value === 'white' ? 'active white' : ''}`}
         onClick={() => onSelect('white')}
       >
-        ⚪ Fehér
+        <IconDotWhite size={12} /> Fehér
       </button>
     </div>
   )

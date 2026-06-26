@@ -3,6 +3,7 @@ import { supabase } from '../supabaseClient'
 import { AddressSelector } from './AddressSelector'
 import { DeliveryTypeSelect } from './DeliveryTypeSelect'
 import { useToast } from './Toast'
+import { IconPizza, IconDriver, IconSearch, IconDotBlack, IconDotWhite, IconMoney, IconPhone, IconLocation } from './icons'
 import '../styles/DriverDashboard.css'
 
 interface Address {
@@ -191,9 +192,9 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
   return (
     <div className="container">
       <div className="dashboard-header">
-        <h1>🍕 Mepper Pill</h1>
+        <h1 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}><IconPizza size={28} /> Mepper Pill</h1>
         <div className="user-info">
-          <span className="user-role">🚗 Futár</span>
+          <span className="user-role"><IconDriver size={14} /> Futár</span>
           <span className="user-name">{userProfile.full_name || userProfile.email}</span>
           <button className="btn btn-danger btn-small" onClick={onLogout}>Kijelentkezés</button>
         </div>
@@ -230,7 +231,7 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
                 const selectedAddress = id ? addresses.find((a) => a.id === id) : undefined
                 setOrderPhoneNum(selectedAddress?.phone_num || '')
               }}
-              placeholder="📍 Válasszon meglévő címet vagy írjon be újat"
+                    placeholder="Válasszon meglévő címet vagy írjon be újat"
             />
             <input
               type="tel"
@@ -249,7 +250,7 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
           <div className="search-bar">
             <input
               type="text"
-              placeholder="🔍 Megrendelések keresése cím alapján..."
+              placeholder="Megrendelések keresése cím alapján..."
               value={orderSearchTerm}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setOrderSearchTerm(e.target.value)}
               className="search-input"
@@ -257,8 +258,8 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
           </div>
           <div className="filter-buttons">
             <button className={`filter-btn ${orderTypeFilter === 'all' ? 'active' : ''}`} onClick={() => setOrderTypeFilter('all')}>Összes</button>
-            <button className={`filter-btn ${orderTypeFilter === 'black' ? 'active' : ''}`} onClick={() => setOrderTypeFilter('black')}>⚫ Fekete</button>
-            <button className={`filter-btn ${orderTypeFilter === 'white' ? 'active' : ''}`} onClick={() => setOrderTypeFilter('white')}>⚪ Fehér</button>
+            <button className={`filter-btn ${orderTypeFilter === 'black' ? 'active' : ''}`} onClick={() => setOrderTypeFilter('black')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, justifyContent: 'center' }}><IconDotBlack size={10} /> Fekete</button>
+            <button className={`filter-btn ${orderTypeFilter === 'white' ? 'active' : ''}`} onClick={() => setOrderTypeFilter('white')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, justifyContent: 'center' }}><IconDotWhite size={10} /> Fehér</button>
           </div>
           <div className="list">
             {filteredOrders.length === 0 ? (
@@ -268,7 +269,6 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
             ) : (
               filteredOrders.map((order) => {
                 const badgeClass = order.type === 'black' ? 'badge-black' : 'badge-white'
-                const icon = order.type === 'black' ? '⚫' : '⚪'
                 const orderAddress = addresses.find((a) => a.id === order.addressid)
                 const phoneNum = orderAddress?.phone_num
                 return (
@@ -276,16 +276,17 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
                     <div className="item-content">
                       <div className="item-name">{order.addressname}</div>
                       <div className="item-detail">{order.details || 'Nincsenek részletek'}</div>
-                      <span className={`item-badge ${badgeClass}`}>
-                        {icon} {order.type === 'black' ? 'FEKETE' : 'FEHÉR'}
+                      <span className={`item-badge ${badgeClass}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                        {order.type === 'black' ? <IconDotBlack size={10} /> : <IconDotWhite size={10} />}
+                        {order.type === 'black' ? 'FEKETE' : 'FEHÉR'}
                       </span>
-                      <div className="item-detail">💰 Ár: {formatRsd(order.price)}</div>
+                      <div className="item-detail" style={{ display: 'flex', alignItems: 'center', gap: 4 }}><IconMoney size={14} /> Ár: {formatRsd(order.price)}</div>
                       <div className="item-detail">Hozzáadva: {order.timestamp}</div>
-                      {phoneNum && <div className="item-detail">📞 {phoneNum}</div>}
+                      {phoneNum && <div className="item-detail" style={{ display: 'flex', alignItems: 'center', gap: 4 }}><IconPhone size={14} /> {phoneNum}</div>}
                     </div>
                     <div className="item-actions">
                       {phoneNum && (
-                        <a href={`tel:${phoneNum}`} className="btn btn-phone btn-small">📞</a>
+                        <a href={`tel:${phoneNum}`} className="btn btn-phone btn-small"><IconPhone size={16} /></a>
                       )}
                       <button className="btn btn-danger btn-small" onClick={() => handleDeleteOrder(order.id)}>Törlés</button>
                     </div>
@@ -308,7 +309,7 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
                 <div className="search-bar">
                   <input
                     type="text"
-                    placeholder="🔍 Keresés az elszámolásban..."
+                    placeholder="Keresés az elszámolásban..."
                     value={settlementSearchTerm}
                     onChange={(e: ChangeEvent<HTMLInputElement>) => setSettlementSearchTerm(e.target.value)}
                     className="search-input"
@@ -326,7 +327,10 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
                         />
                         <span className="settlement-order-info">
                           <span className="order-address">{order.addressname}</span>
-                          <span className="order-type-badge">{order.type === 'black' ? '⚫ Fekete' : '⚪ Fehér'}</span>
+                          <span className="order-type-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                            {order.type === 'black' ? <IconDotBlack size={8} /> : <IconDotWhite size={8} />}
+                            {order.type === 'black' ? 'Fekete' : 'Fehér'}
+                          </span>
                           <span className="order-price">{formatRsd(order.price)}</span>
                           <span className="order-timestamp">{order.timestamp}</span>
                         </span>
@@ -344,17 +348,17 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
                       <div className="total-amount">{formatRsd(getSettlementTotals().totalAll)}</div>
                     </div>
                     <div className="total-box total-black">
-                      <div className="total-label">⚫ Fekete</div>
+                      <div className="total-label" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><IconDotBlack size={10} /> Fekete</div>
                       <div className="total-amount">{formatRsd(getSettlementTotals().totalBlack)}</div>
                     </div>
                     <div className="total-box total-white">
-                      <div className="total-label">⚪ Fehér</div>
+                      <div className="total-label" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><IconDotWhite size={10} /> Fehér</div>
                       <div className="total-amount">{formatRsd(getSettlementTotals().totalWhite)}</div>
                     </div>
                   </div>
 
                   <div className="expenses-section">
-                    <h3>💰 Költségek</h3>
+                    <h3 style={{ display: 'flex', alignItems: 'center', gap: 4 }}><IconMoney size={18} /> Költségek</h3>
                     <form className="expense-form" onSubmit={handleAddExpense}>
                       <input
                         type="text"
@@ -380,7 +384,7 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
                           <div key={exp.id} className="expense-item">
                             <span className="expense-name">{exp.name}</span>
                             <span className="expense-price">{formatRsd(exp.price)}</span>
-                            <button className="btn btn-danger btn-small" onClick={() => handleDeleteExpense(exp.id)}>✕</button>
+                            <button className="btn btn-danger btn-small" onClick={() => handleDeleteExpense(exp.id)}><IconX size={12} /></button>
                           </div>
                         ))}
                       </div>
@@ -419,11 +423,14 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3 className="modal-title">Megrendelés részletei</h3>
-              <button className="modal-close" onClick={() => setSelectedOrderDetails(null)}>✕</button>
+              <button className="modal-close" onClick={() => setSelectedOrderDetails(null)}><IconX size={16} /></button>
             </div>
             <div className="modal-body">
               <div className="modal-row"><span className="modal-label">Cím</span><span className="modal-value">{selectedOrderDetails.addressname}</span></div>
-              <div className="modal-row"><span className="modal-label">Típus</span><span className="modal-value">{selectedOrderDetails.type === 'black' ? '⚫ Fekete' : '⚪ Fehér'}</span></div>
+              <div className="modal-row"><span className="modal-label">Típus</span><span className="modal-value" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                {selectedOrderDetails.type === 'black' ? <IconDotBlack size={10} /> : <IconDotWhite size={10} />}
+                {selectedOrderDetails.type === 'black' ? 'Fekete' : 'Fehér'}
+              </span></div>
               <div className="modal-row"><span className="modal-label">Részletek</span><span className="modal-value">{selectedOrderDetails.details || 'Nincsenek részletek'}</span></div>
               <div className="modal-row"><span className="modal-label">Ár</span><span className="modal-value">{formatRsd(selectedOrderDetails.price)}</span></div>
               <div className="modal-row"><span className="modal-label">Időpont</span><span className="modal-value">{selectedOrderDetails.timestamp}</span></div>

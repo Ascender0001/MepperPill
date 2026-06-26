@@ -1,6 +1,6 @@
 .toast-container {
   position: fixed;
-  bottom: 20px;
+  top: 16px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 9999;
@@ -23,29 +23,29 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  animation: toastSlideUp 0.25s ease-out;
+  animation: toastSlideDown 0.25s ease-out;
   pointer-events: auto;
   border: 1.5px solid;
 }
 
 .toast-success {
-  background: linear-gradient(135deg, rgba(0, 255, 0, 0.12), rgba(0, 0, 0, 0.6));
+  background: linear-gradient(135deg, #0a0a14, #0e0e20);
   color: #0f0;
-  border-color: rgba(0, 255, 0, 0.3);
-  box-shadow: 0 4px 20px rgba(0, 255, 0, 0.15);
+  border-color: rgba(0, 255, 0, 0.4);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
 }
 
 .toast-error {
-  background: linear-gradient(135deg, rgba(255, 0, 51, 0.12), rgba(0, 0, 0, 0.6));
+  background: linear-gradient(135deg, #0a0a14, #0e0e20);
   color: #ff0033;
-  border-color: rgba(255, 0, 51, 0.3);
-  box-shadow: 0 4px 20px rgba(255, 0, 51, 0.15);
+  border-color: rgba(255, 0, 51, 0.4);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
 }
 
-@keyframes toastSlideUp {
+@keyframes toastSlideDown {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(-12px);
   }
   to {
     opacity: 1;

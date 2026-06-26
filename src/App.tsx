@@ -5,6 +5,7 @@ import { AuthPage } from './components/AuthPage'
 import { ManagerDashboard } from './components/ManagerDashboard'
 import { DriverDashboard } from './components/DriverDashboard'
 import { ToastProvider } from './components/Toast'
+import { IconPizza } from './components/icons'
 import './style.css'
 
 interface Profile {
@@ -60,7 +61,7 @@ function AppInner() {
   if (loading) {
     return (
       <div className="container" style={{ textAlign: 'center', paddingTop: '100px' }}>
-        <h1>🍕 Mepper Pill</h1>
+        <h1 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}><IconPizza size={28} /> Mepper Pill</h1>
         <p style={{ color: '#ff6b00', marginTop: '20px' }}>Betöltés...</p>
       </div>
     )

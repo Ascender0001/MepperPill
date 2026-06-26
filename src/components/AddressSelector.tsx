@@ -7,7 +7,7 @@ interface AddressSelectorProps {
   placeholder?: string
 }
 
-export function AddressSelector({ addresses, onSelect, placeholder = '📍 Válasszon vagy írjon be új címet' }: AddressSelectorProps) {
+export function AddressSelector({ addresses, onSelect, placeholder = 'Válasszon vagy írjon be új címet' }: AddressSelectorProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedAddress, setSelectedAddress] = useState<{ id?: number; name: string } | null>(null)
