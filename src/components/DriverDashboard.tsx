@@ -46,6 +46,9 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
   const [orderTypeFilter, setOrderTypeFilter] = useState<'all' | 'black' | 'white'>('all')
   const [settlementSearchTerm, setSettlementSearchTerm] = useState('')
   const [checkedOrders, setCheckedOrders] = useState<Set<number>>(new Set())
+  const [expenses, setExpenses] = useState<Array<{ id: number; name: string; price: number }>>([])
+  const [expenseName, setExpenseName] = useState('')
+  const [expensePrice, setExpensePrice] = useState('')
 
   useEffect(() => {
     const loadData = async () => {
@@ -156,6 +159,22 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
     else newChecked.add(orderId)
     setCheckedOrders(newChecked)
   }
+
+  const handleAddExpense = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const name = expenseName.trim()
+    const price = parseFloat(expensePrice)
+    if (!name || isNaN(price) || price < 0) return
+    setExpenses((prev) => [...prev, { id: Date.now(), name, price }])
+    setExpenseName('')
+    setExpensePrice('')
+  }
+
+  const handleDeleteExpense = (id: number) => {
+    setExpenses((prev) => prev.filter((e) => e.id !== id))
+  }
+
+  const totalExpenses = expenses.reduce((s, e) => s + e.price, 0)
 
   const getSettlementTotals = () => {
     const checked = orders.filter((o) => checkedOrders.has(o.id))
@@ -331,6 +350,58 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
                       <div className="total-amount">{formatRsd(getSettlementTotals().totalWhite)}</div>
                     </div>
                   </div>
+
+                  <div className="expenses-section">
+                    <h3>💰 Költségek</h3>
+                    <form className="expense-form" onSubmit={handleAddExpense}>
+                      <input
+                        type="text"
+                        placeholder="Költség neve"
+                        value={expenseName}
+                        onChange={(e) => setExpenseName(e.target.value)}
+                        required
+                      />
+                      <input
+                        type="number"
+                        placeholder="Összeg"
+                        step="0.01"
+                        min="0"
+                        value={expensePrice}
+                        onChange={(e) => setExpensePrice(e.target.value)}
+                        required
+                      />
+                      <button type="submit" className="btn btn-primary btn-small">Hozzáadás</button>
+                    </form>
+                    {expenses.length > 0 && (
+                      <div className="expense-list">
+                        {expenses.map((exp) => (
+                          <div key={exp.id} className="expense-item">
+                            <span className="expense-name">{exp.name}</span>
+                            <span className="expense-price">{formatRsd(exp.price)}</span>
+                            <button className="btn btn-danger btn-small" onClick={() => handleDeleteExpense(exp.id)}>✕</button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {expenses.length === 0 && (
+                      <div className="empty-small">Nincsenek költségek</div>
+                    )}
+                    <div className="expense-totals">
+                      <div className="total-box total-all">
+                        <div className="total-label">Bevétel összesen</div>
+                        <div className="total-amount">{formatRsd(getSettlementTotals().totalAll)}</div>
+                      </div>
+                      <div className="total-box total-black">
+                        <div className="total-label">⬜ Fekete - Költségek</div>
+                        <div className="total-amount">{formatRsd(getSettlementTotals().totalBlack - totalExpenses)}</div>
+                      </div>
+                      <div className="total-box total-white">
+                        <div className="total-label">⬜ Összes - Költségek</div>
+                        <div className="total-amount">{formatRsd(getSettlementTotals().totalAll - totalExpenses)}</div>
+                      </div>
+                    </div>
+                  </div>
+
                   <button className="btn btn-primary" style={{ marginTop: '20px', width: '100%' }} onClick={() => setCheckedOrders(new Set())}>
                     Összes kijelölés törlése
                   </button>
