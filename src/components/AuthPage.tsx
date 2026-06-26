@@ -1,7 +1,7 @@
 import { useState, FormEvent } from 'react'
 import { supabase } from '../supabaseClient'
 import '../styles/Auth.css'
-import { IconPizza, IconDriver, IconManager } from './icons'
+import { IconManager } from './icons'
 
 interface AuthPageProps {
   onAuth: () => void
@@ -65,9 +65,7 @@ export function AuthPage({ onAuth }: AuthPageProps) {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h1 className="auth-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
-          <IconPizza size={30} /> Mepper Pill
-        </h1>
+        <h1 className="auth-title">🍕 Mepper Pill</h1>
         <p className="auth-subtitle">
           {mode === 'login' ? 'Bejelentkezés' : 'Regisztráció'}
         </p>
@@ -139,7 +137,7 @@ export function AuthPage({ onAuth }: AuthPageProps) {
                   className={`role-option ${role === 'driver' ? 'selected' : ''}`}
                   onClick={() => setRole('driver')}
                 >
-                  <span className="role-icon"><IconDriver size={24} /></span>
+                  <span className="role-icon">🚗</span>
                   <span className="role-name">Futár</span>
                 </button>
                 <button

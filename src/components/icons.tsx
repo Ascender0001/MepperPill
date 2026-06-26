@@ -1,32 +1,9 @@
 /* Simple SVG icons matching the favicon aesthetic */
 
-export function IconPizza({ size = 20 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
-      <path d="M16 4L4 28h24L16 4z" fill="#ff0033" />
-      <path d="M16 8l-8 16h16L16 8z" fill="#ff6b00" />
-      <circle cx="16" cy="20" r="2" fill="#0f0" />
-      <circle cx="12" cy="16" r="1.5" fill="#0f0" />
-      <circle cx="20" cy="16" r="1.5" fill="#0f0" />
-    </svg>
-  )
-}
-
 export function IconPhone({ size = 16 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="#0f0" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-    </svg>
-  )
-}
-
-export function IconDriver({ size = 18 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="#ff6b00" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M5 17a2 2 0 0 1-2-2V9l3-3h10l4 4v5a2 2 0 0 1-2 2" />
-      <circle cx="7" cy="17" r="2" fill="none" />
-      <circle cx="17" cy="17" r="2" fill="none" />
-      <path d="M5 17h14" />
     </svg>
   )
 }

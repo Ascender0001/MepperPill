@@ -1,7 +1,7 @@
 import { useState, useEffect, ChangeEvent } from 'react'
 import { supabase } from '../supabaseClient'
 import '../styles/ManagerDashboard.css'
-import { IconPizza, IconManager, IconSearch, IconMoney, IconDriver, IconDotBlack, IconDotWhite, IconX } from './icons'
+import { IconManager, IconSearch, IconMoney, IconDotBlack, IconDotWhite, IconX } from './icons'
 
 interface Profile {
   id: string
@@ -121,7 +121,7 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
   return (
     <div className="container">
       <div className="dashboard-header">
-        <h1 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}><IconPizza size={28} /> Mepper Pill</h1>
+        <h1>🍕 Mepper Pill</h1>
         <div className="user-info">
           <span className="user-role"><IconManager size={14} /> Menedzser</span>
           <span className="user-name">{userProfile.full_name || userProfile.email}</span>
@@ -223,7 +223,7 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
                 return (
                   <div key={driver.id} className="driver-card">
                     <div className="driver-info">
-                      <div className="driver-name" style={{ display: 'flex', alignItems: 'center', gap: 4 }}><IconDriver size={14} /> {driver.full_name || 'Névtelen'}</div>
+                      <div className="driver-name">🚗 {driver.full_name || 'Névtelen'}</div>
                       <div className="driver-email">{driver.email}</div>
                     </div>
                     <div className="driver-stats">

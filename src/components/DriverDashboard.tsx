@@ -3,7 +3,7 @@ import { supabase } from '../supabaseClient'
 import { AddressSelector } from './AddressSelector'
 import { DeliveryTypeSelect } from './DeliveryTypeSelect'
 import { useToast } from './Toast'
-import { IconPizza, IconDriver, IconSearch, IconDotBlack, IconDotWhite, IconMoney, IconPhone, IconLocation } from './icons'
+import { IconSearch, IconDotBlack, IconDotWhite, IconMoney, IconPhone, IconLocation } from './icons'
 import '../styles/DriverDashboard.css'
 
 interface Address {
@@ -192,9 +192,9 @@ export function DriverDashboard({ userProfile, onLogout }: DriverDashboardProps)
   return (
     <div className="container">
       <div className="dashboard-header">
-        <h1 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}><IconPizza size={28} /> Mepper Pill</h1>
+        <h1>🍕 Mepper Pill</h1>
         <div className="user-info">
-          <span className="user-role"><IconDriver size={14} /> Futár</span>
+          <span className="user-role">🚗 Futár</span>
           <span className="user-name">{userProfile.full_name || userProfile.email}</span>
           <button className="btn btn-danger btn-small" onClick={onLogout}>Kijelentkezés</button>
         </div>
