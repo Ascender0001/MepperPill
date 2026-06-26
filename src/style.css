@@ -225,7 +225,8 @@ h2::after {
   font-weight: 900;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: #eee;
+  color: var(--red);
+  text-shadow: 0 0 10px var(--glow-red), 0 0 30px rgba(255, 0, 51, 0.3);
 }
 
 .navbar-right {
