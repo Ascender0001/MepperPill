@@ -5,7 +5,6 @@ import { AuthPage } from './components/AuthPage'
 import { ManagerDashboard } from './components/ManagerDashboard'
 import { DriverDashboard } from './components/DriverDashboard'
 import { NavBar } from './components/NavBar'
-import { ProfilePage } from './components/ProfilePage'
 import { ToastProvider } from './components/Toast'
 import './style.css'
 
@@ -21,7 +20,6 @@ function AppInner() {
   const [session, setSession] = useState<Session | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
-  const [page, setPage] = useState<'dashboard' | 'profile'>('dashboard')
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session: s } }) => {
@@ -60,10 +58,6 @@ function AppInner() {
 
   const handleAuth = () => {}
 
-  const handleProfileUpdated = (updated: Profile) => {
-    setProfile(updated)
-  }
-
   if (loading) {
     return (
       <div className="container" style={{ textAlign: 'center', paddingTop: '100px' }}>
@@ -84,12 +78,9 @@ function AppInner() {
         email={profile.email}
         role={profile.role as 'driver' | 'manager'}
         onLogout={handleLogout}
-        onNavigateProfile={() => setPage('profile')}
       />
-      {page === 'profile' ? (
-        <ProfilePage profile={profile} onProfileUpdated={handleProfileUpdated} onBack={() => setPage('dashboard')} />
-      ) : profile.role === 'manager' ? (
-        <ManagerDashboard userProfile={profile} />
+      {profile.role === 'manager' ? (
+        <ManagerDashboard />
       ) : (
         <DriverDashboard userProfile={profile} />
       )}

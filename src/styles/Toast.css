@@ -18,14 +18,23 @@
   gap: 10px;
   padding: 14px 18px;
   border-radius: 6px;
-  font-family: 'Courier New', monospace;
   font-size: 13px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  animation: toastSlideDown 0.25s ease-out;
+  animation: toastSlideDown 0.25s cubic-bezier(0.0, 0.0, 0.2, 1) both;
   pointer-events: auto;
   border: 1.5px solid;
+  will-change: transform, opacity;
+}
+
+.toast-exit {
+  animation: toastSlideUp 0.25s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+@keyframes toastSlideUp {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(-16px) scale(0.95); }
 }
 
 .toast-success {
