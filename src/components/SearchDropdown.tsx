@@ -7,7 +7,7 @@ interface SearchDropdownProps {
   placeholder?: string
 }
 
-export function SearchDropdown({ items, onSelect, placeholder = '🔍 Keresés...' }: SearchDropdownProps) {
+export function SearchDropdown({ items, onSelect, placeholder = 'Keresés...' }: SearchDropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedId, setSelectedId] = useState<string | number | null>(null)
