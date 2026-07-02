@@ -1,11 +1,13 @@
 import { useState, useEffect, ChangeEvent } from 'react'
 import { supabase } from '../supabaseClient'
 import '../styles/ManagerDashboard.css'
+import { IconMoney, IconDotBlack, IconDotWhite, IconX } from './icons'
 
 interface Profile {
   id: string
   email: string
   full_name: string
+  phone_num: string | null
   role: string
 }
 
@@ -20,20 +22,48 @@ interface Order {
   driver_id: string | null
 }
 
-interface ManagerDashboardProps {
-  userProfile: Profile
-  onLogout: () => void
+interface TempEntry {
+  id: number
+  price: number
 }
 
-export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProps) {
+export function ManagerDashboard() {
   const [orders, setOrders] = useState<Order[]>([])
   const [drivers, setDrivers] = useState<Profile[]>([])
   const [activeTab, setActiveTab] = useState<'orders' | 'drivers' | 'settlement'>('orders')
   const [orderSearchTerm, setOrderSearchTerm] = useState('')
-  const [settlementSearchTerm, setSettlementSearchTerm] = useState('')
+
   const [orderTypeFilter, setOrderTypeFilter] = useState<'all' | 'black' | 'white'>('all')
-  const [checkedOrders, setCheckedOrders] = useState<Set<number>>(new Set())
+  const [orderSort, setOrderSort] = useState<'none' | 'name-asc' | 'name-desc' | 'price-asc' | 'price-desc'>('none')
+
   const [selectedOrderDetails, setSelectedOrderDetails] = useState<Order | null>(null)
+  const [confirmChange, setConfirmChange] = useState<{ orderId: number; newType: 'black' | 'white' } | null>(null)
+  const [tempEntries, setTempEntries] = useState<TempEntry[]>(() => {
+    try { return JSON.parse(localStorage.getItem('tempDriverEntries') || '[]') as TempEntry[] }
+    catch { return [] }
+  })
+  const [tempNextId, setTempNextId] = useState<number>(() => {
+    try { return JSON.parse(localStorage.getItem('tempDriverNextId') || '-1') as number }
+    catch { return -1 }
+  })
+  const [tempPriceInput, setTempPriceInput] = useState('')
+  const [dailyRevenue, setDailyRevenue] = useState(() => {
+    try { return localStorage.getItem('dailyRevenue') || '' }
+    catch { return '' }
+  })
+  const [dailyRevenueInput, setDailyRevenueInput] = useState('')
+
+  useEffect(() => {
+    localStorage.setItem('tempDriverEntries', JSON.stringify(tempEntries))
+  }, [tempEntries])
+
+  useEffect(() => {
+    localStorage.setItem('tempDriverNextId', JSON.stringify(tempNextId))
+  }, [tempNextId])
+
+  useEffect(() => {
+    localStorage.setItem('dailyRevenue', dailyRevenue)
+  }, [dailyRevenue])
 
   useEffect(() => {
     const loadData = async () => {
@@ -56,7 +86,7 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
   const handleClearOrders = async () => {
     if (orders.length > 0 && confirm('Biztosan szeretné törölni az összes megrendelést?')) {
       const { error } = await supabase.from('orders').delete().gt('id', 0)
-      if (!error) { setOrders([]); setCheckedOrders(new Set()) }
+      if (!error) { setOrders([]) }
     }
   }
 
@@ -72,33 +102,34 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
     }
   }
 
-  const filteredOrders = orders.filter((order) => {
-    const matchesSearch = order.addressname.toLowerCase().includes(orderSearchTerm.toLowerCase())
-    const matchesType = orderTypeFilter === 'all' || order.type === orderTypeFilter
-    return matchesSearch && matchesType
-  })
+  const filteredOrders = orders
+    .filter((order) => {
+      const matchesSearch = order.addressname.toLowerCase().includes(orderSearchTerm.toLowerCase())
+      const matchesType = orderTypeFilter === 'all' || order.type === orderTypeFilter
+      return matchesSearch && matchesType
+    })
+    .sort((a, b) => {
+      if (orderSort === 'name-asc') return a.addressname.localeCompare(b.addressname)
+      if (orderSort === 'name-desc') return b.addressname.localeCompare(a.addressname)
+      if (orderSort === 'price-asc') return a.price - b.price
+      if (orderSort === 'price-desc') return b.price - a.price
+      return 0
+    })
 
-  const filteredSettlementOrders = orders.filter((order) => {
-    const term = settlementSearchTerm.toLowerCase()
-    return order.addressname.toLowerCase().includes(term) || (order.details || '').toLowerCase().includes(term)
-  })
+  const driverSettlementTotals = drivers
+    .map((d) => ({
+      id: d.id,
+      name: d.full_name || d.email,
+      total: orders.filter((o) => o.driver_id === d.id).reduce((s, o) => s + o.price, 0),
+    }))
+    .filter((d) => d.total > 0)
 
-  const handleCheckOrder = (orderId: number) => {
-    const newChecked = new Set(checkedOrders)
-    if (newChecked.has(orderId)) newChecked.delete(orderId)
-    else newChecked.add(orderId)
-    setCheckedOrders(newChecked)
-  }
+  const unassignedTotal = orders.filter((o) => !o.driver_id).reduce((s, o) => s + o.price, 0)
 
-  const getSettlementTotals = () => {
-    const checked = orders.filter((o) => checkedOrders.has(o.id))
-    return {
-      totalAll: checked.reduce((s, o) => s + o.price, 0),
-      totalBlack: checked.filter((o) => o.type === 'black').reduce((s, o) => s + o.price, 0),
-      totalWhite: checked.filter((o) => o.type === 'white').reduce((s, o) => s + o.price, 0),
-      count: checked.length,
-    }
-  }
+  const tempTotal = tempEntries.reduce((s, e) => s + e.price, 0)
+
+  const grandTotal =
+    driverSettlementTotals.reduce((s, d) => s + d.total, 0) + unassignedTotal + tempTotal
 
   const formatRsd = (value: number) =>
     new Intl.NumberFormat('sr-RS', { style: 'currency', currency: 'RSD', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value)
@@ -107,6 +138,26 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
     if (!driverId) return 'Nincs hozzárendelve'
     const driver = drivers.find((d) => d.id === driverId)
     return driver ? driver.full_name || driver.email : 'Ismeretlen'
+  }
+
+  const addTempEntry = () => {
+    const price = Number(tempPriceInput.replace(',', '.'))
+    if (isNaN(price) || price <= 0) return
+    setTempEntries([...tempEntries, { id: tempNextId, price }])
+    setTempNextId(tempNextId - 1)
+    setTempPriceInput('')
+  }
+
+  const handleChangeType = async (orderId: number, newType: 'black' | 'white') => {
+    const { error } = await supabase.from('orders').update({ type: newType }).eq('id', orderId)
+    if (!error) {
+      setOrders(orders.map((o) => (o.id === orderId ? { ...o, type: newType } : o)))
+    }
+    setConfirmChange(null)
+  }
+
+  const removeTempEntry = (id: number) => {
+    setTempEntries(tempEntries.filter((e) => e.id !== id))
   }
 
   const getDriverOrderStats = (driverId: string) => {
@@ -118,16 +169,7 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
   }
 
   return (
-    <div className="container">
-      <div className="dashboard-header">
-        <h1>🍕 Mepper Pill</h1>
-        <div className="user-info">
-          <span className="user-role">👔 Menedzser</span>
-          <span className="user-name">{userProfile.full_name || userProfile.email}</span>
-          <button className="btn btn-danger btn-small" onClick={onLogout}>Kijelentkezés</button>
-        </div>
-      </div>
-
+    <div>
       <div className="tabs">
         <button className={`tab-btn ${activeTab === 'orders' ? 'active' : ''}`} onClick={() => setActiveTab('orders')}>
           Megrendelések
@@ -147,7 +189,7 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
           <div className="search-bar">
             <input
               type="text"
-              placeholder="🔍 Megrendelések keresése cím alapján..."
+              placeholder="Megrendelések keresése cím alapján..."
               value={orderSearchTerm}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setOrderSearchTerm(e.target.value)}
               className="search-input"
@@ -156,8 +198,15 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
 
           <div className="filter-buttons">
             <button className={`filter-btn ${orderTypeFilter === 'all' ? 'active' : ''}`} onClick={() => setOrderTypeFilter('all')}>Összes</button>
-            <button className={`filter-btn ${orderTypeFilter === 'black' ? 'active' : ''}`} onClick={() => setOrderTypeFilter('black')}>⚫ Fekete</button>
-            <button className={`filter-btn ${orderTypeFilter === 'white' ? 'active' : ''}`} onClick={() => setOrderTypeFilter('white')}>⚪ Fehér</button>
+            <button className={`filter-btn ${orderTypeFilter === 'black' ? 'active' : ''}`} onClick={() => setOrderTypeFilter('black')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, justifyContent: 'center' }}><IconDotBlack size={10} /> Fekete</button>
+            <button className={`filter-btn ${orderTypeFilter === 'white' ? 'active' : ''}`} onClick={() => setOrderTypeFilter('white')} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, justifyContent: 'center' }}><IconDotWhite size={10} /> Fehér</button>
+          </div>
+          <div className="filter-buttons">
+            <button className={`filter-btn ${orderSort === 'none' ? 'active' : ''}`} onClick={() => setOrderSort('none')}>Alap</button>
+            <button className={`filter-btn ${orderSort === 'name-asc' ? 'active' : ''}`} onClick={() => setOrderSort('name-asc')}>A–Z</button>
+            <button className={`filter-btn ${orderSort === 'name-desc' ? 'active' : ''}`} onClick={() => setOrderSort('name-desc')}>Z–A</button>
+            <button className={`filter-btn ${orderSort === 'price-asc' ? 'active' : ''}`} onClick={() => setOrderSort('price-asc')}>Ár ↑</button>
+            <button className={`filter-btn ${orderSort === 'price-desc' ? 'active' : ''}`} onClick={() => setOrderSort('price-desc')}>Ár ↓</button>
           </div>
 
           <div className="list">
@@ -168,33 +217,34 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
             ) : (
               filteredOrders.map((order) => {
                 const badgeClass = order.type === 'black' ? 'badge-black' : 'badge-white'
-                const icon = order.type === 'black' ? '⚫' : '⚪'
                 return (
                   <div key={order.id} className="item">
                     <div className="item-content">
-                      <div className="item-name">{order.addressname}</div>
+                      <div className="item-header">
+                        <div className="item-name">{order.addressname}</div>
+                        <span className={`item-badge ${badgeClass}`} onClick={() => setConfirmChange({ orderId: order.id, newType: order.type === 'black' ? 'white' : 'black' })}>
+                          {order.type === 'black' ? <IconDotBlack size={8} /> : <IconDotWhite size={8} />}
+                          {order.type === 'black' ? 'Fekete' : 'Fehér'}
+                        </span>
+                      </div>
                       <div className="item-detail">{order.details || 'Nincsenek részletek'}</div>
-                      <span className={`item-badge ${badgeClass}`}>
-                        {icon} {order.type === 'black' ? 'FEKETE' : 'FEHÉR'}
-                      </span>
-                      <div className="item-detail">💰 Ár: {formatRsd(order.price)}</div>
-                      <div className="item-detail">Hozzáadva: {order.timestamp}</div>
-                      <div className="item-detail">Futár: {getDriverName(order.driver_id)}</div>
-
-                      <div className="order-actions-row">
-                        <select
-                          value={order.driver_id || ''}
-                          onChange={(e) => handleAssignDriver(order.id, e.target.value)}
-                          className="inline-select"
-                        >
-                          <option value="">-- Futár --</option>
-                          {drivers.map((d) => (
-                            <option key={d.id} value={d.id}>{d.full_name || d.email}</option>
-                          ))}
-                        </select>
+                      <div className="item-meta">
+                        <span className="item-detail"><IconMoney size={12} /> {formatRsd(order.price)}</span>
+                        <span className="item-detail">Hozzáadva: {order.timestamp}</span>
+                        <span className="item-detail">Futár: {getDriverName(order.driver_id)}</span>
                       </div>
                     </div>
                     <div className="item-actions">
+                      <select
+                        value={order.driver_id || ''}
+                        onChange={(e) => handleAssignDriver(order.id, e.target.value)}
+                        className="inline-select"
+                      >
+                        <option value="">-- Futár --</option>
+                        {drivers.map((d) => (
+                          <option key={d.id} value={d.id}>{d.full_name || d.email}</option>
+                        ))}
+                      </select>
                       <button className="btn btn-danger btn-small" onClick={() => handleDeleteOrder(order.id)}>Törlés</button>
                     </div>
                   </div>
@@ -262,64 +312,120 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
         <div className="tab-content">
           <h2>Elszámolás</h2>
           <div className="settlement-list">
-            {orders.length === 0 ? (
-              <div className="empty">Nincs megrendelés az elszámoláshoz</div>
-            ) : (
-              <>
-                <div className="search-bar">
-                  <input
-                    type="text"
-                    placeholder="🔍 Keresés az elszámolásban..."
-                    value={settlementSearchTerm}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setSettlementSearchTerm(e.target.value)}
-                    className="search-input"
-                  />
-                </div>
-                <div className="settlement-orders">
-                  {filteredSettlementOrders.map((order) => (
-                    <div key={order.id} className="settlement-item" onClick={() => setSelectedOrderDetails(order)}>
-                      <label className="settlement-label">
-                        <input
-                          type="checkbox"
-                          checked={checkedOrders.has(order.id)}
-                          onChange={() => handleCheckOrder(order.id)}
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                        <span className="settlement-order-info">
-                          <span className="order-address">{order.addressname}</span>
-                          <span className="order-type-badge">{order.type === 'black' ? '⚫ Fekete' : '⚪ Fehér'}</span>
-                          <span className="order-price">{formatRsd(order.price)}</span>
-                          <span className="order-timestamp">{order.timestamp}</span>
-                          <span className="order-driver">{getDriverName(order.driver_id)}</span>
-                        </span>
-                      </label>
+            <div className="temp-driver-input">
+              <input
+                type="text"
+                placeholder="Ideiglenes futár összeg..."
+                value={tempPriceInput}
+                onChange={(e) => setTempPriceInput(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') addTempEntry() }}
+                className="search-input"
+              />
+              <button className="btn btn-primary btn-small" onClick={addTempEntry}>Hozzáadás</button>
+            </div>
+
+            <div className="settlement-orders">
+              {driverSettlementTotals.length === 0 && unassignedTotal === 0 && tempEntries.length === 0 ? (
+                <div className="empty">Nincs megrendelés az elszámoláshoz</div>
+              ) : (
+                <>
+                  {driverSettlementTotals.map((d) => (
+                    <div key={d.id} className="settlement-item">
+                      <span className="settlement-order-info">
+                        <span className="order-driver">{d.name}</span>
+                        <span className="order-price">{formatRsd(d.total)}</span>
+                      </span>
                     </div>
                   ))}
+                  {unassignedTotal > 0 && (
+                    <div className="settlement-item">
+                      <span className="settlement-order-info">
+                        <span className="order-driver">Nincs hozzárendelve</span>
+                        <span className="order-price">{formatRsd(unassignedTotal)}</span>
+                      </span>
+                    </div>
+                  )}
+                  {tempEntries.map((entry) => (
+                    <div key={entry.id} className="settlement-item settlement-item-temp">
+                      <span className="settlement-order-info">
+                        <span className="order-driver">Ideiglenes futár</span>
+                        <span className="order-price">{formatRsd(entry.price)}</span>
+                      </span>
+                      <button
+                        className="btn btn-small btn-danger"
+                        onClick={() => removeTempEntry(entry.id)}
+                      >Törlés</button>
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
+
+            <h2 style={{ marginBottom: 8 }}>Napi bevétel</h2>
+
+            <div className="daily-revenue-input">
+              <input
+                type="text"
+                placeholder="Összeg..."
+                value={dailyRevenueInput}
+                onChange={(e) => setDailyRevenueInput(e.target.value)}
+                className="search-input"
+              />
+              <button
+                className="btn"
+                onClick={() => { setDailyRevenue(dailyRevenueInput); setDailyRevenueInput('') }}
+                style={{ background: 'var(--green)', color: '#000', fontWeight: 900, border: 'none', padding: '8px 20px', borderRadius: 'var(--radius)', fontSize: 13, minHeight: 36 }}
+              >Frissítés</button>
+            </div>
+
+            <div className="settlement-totals">
+              <div className="totals-grid">
+                <div className="total-box total-all">
+                  <div className="total-label">Összes bevétel</div>
+                  <div className="total-amount">{formatRsd(grandTotal)}</div>
                 </div>
-                <div className="settlement-totals">
-                  <div className="total-card">
-                    <h3>Kiválasztott megrendelések: {getSettlementTotals().count}</h3>
-                  </div>
-                  <div className="totals-grid">
-                    <div className="total-box total-all">
-                      <div className="total-label">Összes</div>
-                      <div className="total-amount">{formatRsd(getSettlementTotals().totalAll)}</div>
-                    </div>
-                    <div className="total-box total-black">
-                      <div className="total-label">⚫ Fekete</div>
-                      <div className="total-amount">{formatRsd(getSettlementTotals().totalBlack)}</div>
-                    </div>
-                    <div className="total-box total-white">
-                      <div className="total-label">⚪ Fehér</div>
-                      <div className="total-amount">{formatRsd(getSettlementTotals().totalWhite)}</div>
-                    </div>
-                  </div>
-                  <button className="btn btn-primary" style={{ marginTop: '20px', width: '100%' }} onClick={() => setCheckedOrders(new Set())}>
-                    Összes kijelölés törlése
-                  </button>
+                <div className="total-box total-all">
+                  <div className="total-label">Napi bevétel</div>
+                  <div className="total-amount">{dailyRevenue || '—'}</div>
                 </div>
-              </>
-            )}
+              </div>
+            </div>
+
+            {(() => {
+              const target = Number(dailyRevenue.replace(',', '.'))
+              if (!dailyRevenue || isNaN(target)) return null
+              const diff = grandTotal - target
+              const absDiff = Math.abs(diff)
+              const isEqual = Math.abs(diff) < 0.01
+              const isMissing = diff < 0
+              return (
+                <div className={`revenue-status ${isEqual ? 'ok' : isMissing ? 'missing' : 'more'}`}>
+                  {isEqual ? (
+                    <div className="revenue-status-text">✓✓ Rendben</div>
+                  ) : isMissing ? (
+                    <div className="revenue-status-text">Hiányzik {formatRsd(absDiff)}</div>
+                  ) : (
+                    <div className="revenue-status-text">Többlet {formatRsd(absDiff)}</div>
+                  )}
+                </div>
+              )
+            })()}
+          </div>
+        </div>
+      )}
+
+      {confirmChange && (
+        <div className="confirm-overlay" onClick={() => setConfirmChange(null)}>
+          <div className="confirm-box" onClick={(e) => e.stopPropagation()}>
+            <div className="confirm-title">Típus módosítása</div>
+            <div className="confirm-text">
+              Biztosan szeretné módosítani a rendelés típusát<br />
+              <strong>{confirmChange.newType === 'black' ? 'Feketére' : 'Fehérre'}</strong>?
+            </div>
+            <div className="confirm-actions">
+              <button className="btn btn-danger btn-small" onClick={() => setConfirmChange(null)}>Mégse</button>
+              <button className="btn btn-primary btn-small" onClick={() => handleChangeType(confirmChange.orderId, confirmChange.newType)}>Módosítás</button>
+            </div>
           </div>
         </div>
       )}
@@ -329,11 +435,14 @@ export function ManagerDashboard({ userProfile, onLogout }: ManagerDashboardProp
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3 className="modal-title">Megrendelés részletei</h3>
-              <button className="modal-close" onClick={() => setSelectedOrderDetails(null)}>✕</button>
+              <button className="modal-close" onClick={() => setSelectedOrderDetails(null)}><IconX size={16} /></button>
             </div>
             <div className="modal-body">
               <div className="modal-row"><span className="modal-label">Cím</span><span className="modal-value">{selectedOrderDetails.addressname}</span></div>
-              <div className="modal-row"><span className="modal-label">Típus</span><span className="modal-value">{selectedOrderDetails.type === 'black' ? '⚫ Fekete' : '⚪ Fehér'}</span></div>
+              <div className="modal-row"><span className="modal-label">Típus</span><span className="modal-value" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                {selectedOrderDetails.type === 'black' ? <IconDotBlack size={10} /> : <IconDotWhite size={10} />}
+                {selectedOrderDetails.type === 'black' ? 'Fekete' : 'Fehér'}
+              </span></div>
               <div className="modal-row"><span className="modal-label">Részletek</span><span className="modal-value">{selectedOrderDetails.details || 'Nincsenek részletek'}</span></div>
               <div className="modal-row"><span className="modal-label">Ár</span><span className="modal-value">{formatRsd(selectedOrderDetails.price)}</span></div>
               <div className="modal-row"><span className="modal-label">Időpont</span><span className="modal-value">{selectedOrderDetails.timestamp}</span></div>

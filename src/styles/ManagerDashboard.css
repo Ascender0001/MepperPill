@@ -1,50 +1,4 @@
-﻿/* Manager Dashboard  Command Center */
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(255, 0, 51, 0.15);
-}
-
-.dashboard-header h1 {
-  margin-bottom: 0;
-  margin-top: 0;
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.user-role {
-  background: linear-gradient(90deg, #ff0033 0%, #ff6b00 100%);
-  color: #000;
-  padding: 4px 12px;
-  font-size: 10px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  font-family: 'Courier New', monospace;
-  border-radius: 4px;
-}
-
-.user-name {
-  color: #ff6b00;
-  font-size: 12px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-family: 'Courier New', monospace;
-  text-shadow: 0 0 6px rgba(255, 107, 0, 0.2);
-}
-
-/* Driver assignment */
+﻿/* Manager Dashboard — unique styles */
 .assign-driver-field {
   display: flex;
   flex-direction: column;
@@ -56,7 +10,7 @@
   border: 1.5px solid rgba(255, 0, 51, 0.2);
   border-radius: 4px;
   font-size: 13px;
-  font-family: 'Courier New', monospace;
+
   background: rgba(0, 0, 0, 0.55);
   color: #0f0;
   transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -69,42 +23,60 @@
   box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.15);
 }
 
-/* Driver Cards */
-.driver-cards {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
-}
+.inline-driver-select {
+  padding: 6px 10px;
+  border: 1.5px solid rgba(255, 0, 51, 0.25);
+  border-radius: 4px;
+  font-size: 11px;
 
-.driver-card {
-  background: linear-gradient(160deg, rgba(255, 0, 51, 0.04) 0%, rgba(0, 0, 0, 0.4) 100%);
-  border: 1.5px solid rgba(255, 0, 51, 0.2);
-  border-radius: 6px;
-  padding: 20px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #0f0;
+  cursor: pointer;
   transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
+  min-height: auto;
 }
 
-.driver-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #ff0033, #ff6b00);
-  opacity: 0;
-  transition: opacity 0.25s;
+.inline-driver-select:focus {
+  outline: none;
+  border-color: #ff6b00;
+  box-shadow: 0 0 0 2px rgba(255, 107, 0, 0.15);
 }
 
-.driver-card:hover {
-  border-color: #ff0033;
-  box-shadow: 0 4px 20px rgba(255, 0, 51, 0.2);
+.inline-status-select {
+  padding: 6px 10px;
+  border: 1.5px solid rgba(255, 107, 0, 0.3);
+  border-radius: 4px;
+  font-size: 11px;
+
+  background: rgba(0, 0, 0, 0.55);
+  color: #ff6b00;
+  cursor: pointer;
+  font-weight: 800;
+  transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: auto;
 }
 
-.driver-card:hover::before {
-  opacity: 1;
+.inline-status-select:focus {
+  outline: none;
+  border-color: #ff6b00;
+  box-shadow: 0 0 0 2px rgba(255, 107, 0, 0.15);
+}
+
+.mini-orders {
+  max-height: 180px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mini-orders::-webkit-scrollbar {
+  width: 4px;
+}
+
+.mini-orders::-webkit-scrollbar-thumb {
+  background: rgba(255, 0, 51, 0.4);
+  border-radius: 2px;
 }
 
 .driver-card-header {
@@ -127,15 +99,7 @@
 .driver-card-email {
   color: #666;
   font-size: 11px;
-  font-family: 'Courier New', monospace;
-}
 
-/* Driver Stats */
-.driver-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-bottom: 14px;
 }
 
 .driver-stat {
@@ -152,106 +116,6 @@
   background: rgba(255, 107, 0, 0.04);
 }
 
-.stat-label {
-  font-size: 9px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #777;
-  font-family: 'Courier New', monospace;
-  margin-bottom: 4px;
-}
-
-.stat-value {
-  font-size: 18px;
-  font-weight: 900;
-  font-family: 'Courier New', monospace;
-  color: #ff6b00;
-  text-shadow: 0 0 8px rgba(255, 107, 0, 0.2);
-}
-
-/* Inline selects */
-.inline-driver-select {
-  padding: 6px 10px;
-  border: 1.5px solid rgba(255, 0, 51, 0.25);
-  border-radius: 4px;
-  font-size: 11px;
-  font-family: 'Courier New', monospace;
-  background: rgba(0, 0, 0, 0.55);
-  color: #0f0;
-  cursor: pointer;
-  transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  min-height: auto;
-}
-
-.inline-driver-select:focus {
-  outline: none;
-  border-color: #ff6b00;
-  box-shadow: 0 0 0 2px rgba(255, 107, 0, 0.15);
-}
-
-.inline-status-select {
-  padding: 6px 10px;
-  border: 1.5px solid rgba(255, 107, 0, 0.3);
-  border-radius: 4px;
-  font-size: 11px;
-  font-family: 'Courier New', monospace;
-  background: rgba(0, 0, 0, 0.55);
-  color: #ff6b00;
-  cursor: pointer;
-  font-weight: 800;
-  transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  min-height: auto;
-}
-
-.inline-status-select:focus {
-  outline: none;
-  border-color: #ff6b00;
-  box-shadow: 0 0 0 2px rgba(255, 107, 0, 0.15);
-}
-
-/* Mini orders inside driver card */
-.mini-orders {
-  max-height: 180px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.mini-orders::-webkit-scrollbar {
-  width: 4px;
-}
-
-.mini-orders::-webkit-scrollbar-thumb {
-  background: rgba(255, 0, 51, 0.4);
-  border-radius: 2px;
-}
-
-.mini-order {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 10px;
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 0, 51, 0.1);
-  border-radius: 4px;
-  font-size: 11px;
-  transition: 0.2s;
-}
-
-.mini-order:hover {
-  border-color: rgba(255, 0, 51, 0.25);
-  background: rgba(255, 0, 51, 0.04);
-}
-
-.mini-order-address {
-  color: #ff0033;
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: 11px;
-  letter-spacing: 0.5px;
-}
-
 .mini-order-type {
   font-size: 9px;
   padding: 2px 8px;
@@ -262,7 +126,6 @@
   text-transform: uppercase;
 }
 
-/* Settlement driver name */
 .settlement-driver-name {
   color: #ff0033;
   font-weight: 900;
@@ -275,7 +138,6 @@
   text-shadow: 0 0 8px rgba(255, 0, 51, 0.2);
 }
 
-/* Logout button */
 .logout-btn {
   padding: 6px 14px;
   background: transparent;
@@ -285,7 +147,7 @@
   font-size: 11px;
   font-weight: 800;
   cursor: pointer;
-  font-family: 'Courier New', monospace;
+
   text-transform: uppercase;
   letter-spacing: 1px;
   transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -295,31 +157,4 @@
   background: rgba(255, 0, 51, 0.1);
   border-color: #ff0033;
   box-shadow: 0 0 12px rgba(255, 0, 51, 0.3);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .dashboard-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .driver-stats {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-}
-
-@media (max-width: 480px) {
-  .driver-card {
-    padding: 14px;
-  }
-
-  .driver-card-name {
-    font-size: 12px;
-  }
-
-  .stat-value {
-    font-size: 16px;
-  }
 }

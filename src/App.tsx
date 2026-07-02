@@ -1,31 +1,33 @@
 import { useState, useEffect } from 'react'
+import { type Session } from '@supabase/supabase-js'
 import { supabase } from './supabaseClient'
 import { AuthPage } from './components/AuthPage'
 import { ManagerDashboard } from './components/ManagerDashboard'
 import { DriverDashboard } from './components/DriverDashboard'
+import { NavBar } from './components/NavBar'
+import { ToastProvider } from './components/Toast'
 import './style.css'
 
 interface Profile {
   id: string
   email: string
   full_name: string
+  phone_num: string | null
   role: string
 }
 
-function App() {
-  const [session, setSession] = useState<any>(null)
+function AppInner() {
+  const [session, setSession] = useState<Session | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Get initial session
     supabase.auth.getSession().then(({ data: { session: s } }) => {
       setSession(s)
       if (s?.user) void loadProfile(s.user.id)
       else setLoading(false)
     })
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, s) => {
       setSession(s)
       if (s?.user) void loadProfile(s.user.id)
@@ -54,9 +56,7 @@ function App() {
     setProfile(null)
   }
 
-  const handleAuth = () => {
-    // Session will be picked up by onAuthStateChange
-  }
+  const handleAuth = () => {}
 
   if (loading) {
     return (
@@ -71,11 +71,27 @@ function App() {
     return <AuthPage onAuth={handleAuth} />
   }
 
-  if (profile.role === 'manager') {
-    return <ManagerDashboard userProfile={profile} onLogout={handleLogout} />
-  }
-
-  return <DriverDashboard userProfile={profile} onLogout={handleLogout} />
+  return (
+    <div className="container">
+      <NavBar
+        fullName={profile.full_name}
+        email={profile.email}
+        role={profile.role as 'driver' | 'manager'}
+        onLogout={handleLogout}
+      />
+      {profile.role === 'manager' ? (
+        <ManagerDashboard />
+      ) : (
+        <DriverDashboard userProfile={profile} />
+      )}
+    </div>
+  )
 }
 
-export default App
+export default function App() {
+  return (
+    <ToastProvider>
+      <AppInner />
+    </ToastProvider>
+  )
+}

@@ -1,67 +1,28 @@
-import { useState, useRef, useEffect } from 'react'
+import { IconDotBlack, IconDotWhite } from './icons'
 import '../styles/DeliveryTypeSelect.css'
 
 interface DeliveryTypeSelectProps {
   onSelect: (type: 'black' | 'white') => void
-  value: string
+  value: 'black' | 'white'
 }
 
 export function DeliveryTypeSelect({ onSelect, value }: DeliveryTypeSelectProps) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [selected, setSelected] = useState<string>(value)
-  const dropdownRef = useRef<HTMLDivElement>(null)
-
-  const options = [
-    { value: 'black', label: '⚫ Fekete', color: 'black' },
-    { value: 'white', label: '⚪ Fehér', color: 'white' },
-  ]
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsOpen(false)
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
-
-  const handleSelect = (optionValue: string) => {
-    setSelected(optionValue)
-    onSelect(optionValue as 'black' | 'white')
-    setIsOpen(false)
-  }
-
-  const selectedOption = options.find((opt) => opt.value === selected)
-
   return (
-    <div className="delivery-type-select" ref={dropdownRef}>
+    <div className="delivery-type-switch">
       <button
         type="button"
-        className="delivery-type-toggle"
-        onClick={() => setIsOpen(!isOpen)}
+        className={`switch-btn ${value === 'black' ? 'active black' : ''}`}
+        onClick={() => onSelect('black')}
       >
-        <span className="delivery-type-label">
-          {selectedOption ? selectedOption.label : 'Válassza ki a szállítási típust'}
-        </span>
-        <span className="dropdown-arrow">▼</span>
+        <IconDotBlack size={12} /> Fekete
       </button>
-
-      {isOpen && (
-        <div className="delivery-type-dropdown">
-          {options.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              className={`delivery-type-option ${selected === option.value ? 'selected' : ''}`}
-              onClick={() => handleSelect(option.value)}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
-      )}
+      <button
+        type="button"
+        className={`switch-btn ${value === 'white' ? 'active white' : ''}`}
+        onClick={() => onSelect('white')}
+      >
+        <IconDotWhite size={12} /> Fehér
+      </button>
     </div>
   )
 }

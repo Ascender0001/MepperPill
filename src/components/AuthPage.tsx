@@ -1,6 +1,7 @@
 import { useState, FormEvent } from 'react'
 import { supabase } from '../supabaseClient'
 import '../styles/Auth.css'
+import { IconManager } from './icons'
 
 interface AuthPageProps {
   onAuth: () => void
@@ -144,7 +145,7 @@ export function AuthPage({ onAuth }: AuthPageProps) {
                   className={`role-option ${role === 'manager' ? 'selected' : ''}`}
                   onClick={() => setRole('manager')}
                 >
-                  <span className="role-icon">👔</span>
+                  <span className="role-icon"><IconManager size={24} /></span>
                   <span className="role-name">Menedzser</span>
                 </button>
               </div>
